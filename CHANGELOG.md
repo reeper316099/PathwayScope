@@ -4,6 +4,8 @@ All notable changes to PathwayScope are documented here. The format follows [Kee
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-04
+
 ### Added
 
 - **Home page (desktop app).** The app now opens on a library of everything you looked up. Each gene, pathway and analysis is one card with its size; shared data (like the 3.9 MB pathway hierarchy) is shown separately; a storage bar explains where the space goes. Reach it from the logo, the sidebar or the Go menu (Ctrl/Cmd+Shift+H).
@@ -66,4 +68,5 @@ First release. PathwayScope is an interactive pathway explorer on top of the [Re
 - Human pathways only.
 - Educational and research-exploration use only; not medical advice.
 
+[0.2.0]: https://github.com/reeper316099/PathwayScope/releases/tag/v0.2.0
 [0.1.0]: https://github.com/reeper316099/PathwayScope/releases/tag/v0.1.0

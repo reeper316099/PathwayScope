@@ -1,7 +1,7 @@
 {
   "name": "pathwayscope",
   "productName": "PathwayScope",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Interactive pathway explorer and enrichment analysis built on the Reactome knowledgebase.",
   "private": true,
   "type": "module",
