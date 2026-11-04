@@ -63,6 +63,11 @@ describe('sanitizeSvg', () => {
     expect(styled.attrs.style).toBeUndefined();
     expect(styled.attrs.fill).toBe('red');
   });
+  it('strips inline style attributes from the raw text before parsing (they would trip the CSP)', () => {
+    const p = stubPurifier([]);
+    const out = sanitizeSvg('<svg><rect style="fill:red" width="1"/><g  style=\'a:b\'/></svg>', p);
+    expect(out).toBe('sanitized:<svg><rect width="1"/><g/></svg>');
+  });
   it('forbids scripts, foreign content, links, animation and style elements, and always removes its hook', () => {
     const p = stubPurifier([]);
     sanitizeSvg('<svg/>', p);

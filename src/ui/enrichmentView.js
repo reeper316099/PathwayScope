@@ -16,7 +16,7 @@ import { createEnrichmentChart } from './enrichmentChart.js';
 import { createEnrichmentTable } from './enrichmentTable.js';
 import { createListInput } from './listInput.js';
 import { createNetworkView } from './networkView.js';
-import { getSelection, onSelection, select } from './selection.js';
+import { getSelected, onSelection, select } from './selection.js';
 import { emit, on, setSession, state, store } from './state.js';
 
 // Creates the enrichment view inside `root`. ctx: { openPathway(stId) }.
@@ -210,8 +210,8 @@ export function createEnrichmentView(root, ctx) {
       }),
     };
     refreshViews();
-    const sel = getSelection();
-    if (sel) syncSelection(sel);
+    for (const type of ['pathway', 'gene'])
+      if (getSelected(type)) syncSelection({ type, id: getSelected(type) });
   }
 
   // Runs an analysis (cancelable) and shows progress text.
@@ -312,13 +312,14 @@ export function createEnrichmentView(root, ctx) {
 
   // Mirrors a selection into the table, chart and network.
   function syncSelection(sel) {
-    if (!view) return;
-    if (sel?.type === 'pathway') {
+    if (!view || !sel) return;
+    if (sel.type === 'pathway') {
       view.table.setSelected(sel.id);
       view.chart.setSelected(sel.id);
+    } else {
+      view.table.setGene(sel.id);
     }
-    view.table.setGene(sel?.type === 'gene' ? sel.id : null);
-    view.network.setSelection(sel);
+    view.network.setSelection(getSelected('pathway'), getSelected('gene'));
   }
   onSelection(syncSelection);
   on('session', () => {});

@@ -2,6 +2,9 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { cache } from '../../src/core/http.js';
 import {
+  getDatabaseInfo,
+  getDiagramSvg,
+  getExampleGeneList,
   getHierarchy,
   getInteractors,
   getLowestPathwaysForGene,
@@ -178,5 +181,62 @@ describe('getHierarchy', () => {
     const h = await getHierarchy();
     expect(h.topLevelStIds).toEqual(['R-HSA-1643685']);
     expect(h.nodes.size).toBeGreaterThan(5);
+  });
+});
+
+describe('getDatabaseInfo', () => {
+  it('reads the release number and date from the real response', async () => {
+    stubFetch([[has('/data/database/info'), () => jsonResponse(fixture('database-info'))]]);
+    const info = await getDatabaseInfo();
+    expect(info).toMatchObject({ releaseNumber: 98, releaseDate: '2026-09-18', fromCache: false });
+  });
+  it('gives null (never a guess) when the fields are missing', async () => {
+    stubFetch([[has('/data/database/info'), () => jsonResponse({})]]);
+    expect(await getDatabaseInfo()).toMatchObject({ releaseNumber: null, releaseDate: null });
+  });
+});
+
+describe('getDiagramSvg', () => {
+  const svg = '<svg xmlns="http://www.w3.org/2000/svg"></svg>';
+  const svgResponse = (text) => ({
+    ok: true,
+    status: 200,
+    headers: { get: () => 'image/svg+xml' },
+    text: async () => text,
+  });
+  it('requests the plain diagram, or the overlay when a token is given', async () => {
+    const calls = stubFetch([[has('/exporter/diagram/'), () => svgResponse(svg)]]);
+    expect(await getDiagramSvg('R-HSA-69620')).toBe(svg);
+    expect(calls[0].url).toBe(
+      'https://reactome.org/ContentService/exporter/diagram/R-HSA-69620.svg',
+    );
+    cache.clear();
+    await getDiagramSvg('R-HSA-69620', { token: 'abc+/==' });
+    expect(calls[1].url).toContain('?token=abc%2B%2F%3D%3D&resource=TOTAL');
+  });
+  it('rejects non-SVG answers and malformed IDs', async () => {
+    stubFetch([[has('/exporter/diagram/'), () => svgResponse('not an svg')]]);
+    await expect(getDiagramSvg('R-HSA-1')).rejects.toThrow(/SVG/);
+    await expect(getDiagramSvg('../x')).rejects.toThrow(RangeError);
+  });
+});
+
+describe('getExampleGeneList', () => {
+  it('builds a labeled list from the real participants of a real pathway', async () => {
+    stubFetch([
+      [has('/data/query/R-HSA-69541'), () => jsonResponse(fixture('pathway-R-HSA-69541'))],
+      [
+        has('/participants/R-HSA-69541/referenceEntities'),
+        () => jsonResponse(fixture('participants-R-HSA-69541')),
+      ],
+      [has('/data/database/info'), () => jsonResponse(fixture('database-info'))],
+    ]);
+    const ex = await getExampleGeneList('R-HSA-69541');
+    expect(ex.name).toBe('Stabilization of p53');
+    expect(ex.identifiers).toContain('TP53');
+    expect(ex.identifiers).toContain('ATM');
+    expect(new Set(ex.identifiers).size).toBe(ex.identifiers.length);
+    expect(ex.source).toContain('"Stabilization of p53" (R-HSA-69541), Reactome release 98');
+    expect(ex.source).toContain('sanity check, not a discovery');
   });
 });

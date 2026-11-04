@@ -94,8 +94,8 @@ export function createNetworkView(root, { onSelectPathway, onSelectGene }) {
           label: 'data(label)',
           color: text,
           'font-size': 10,
-          width: 'mapData(degree, 1, 10, 18, 40)',
-          height: 'mapData(degree, 1, 10, 18, 40)',
+          width: 'mapData(degree, 1, 10, 12, 26)',
+          height: 'mapData(degree, 1, 10, 12, 26)',
           'text-valign': 'bottom',
           'text-margin-y': 3,
         },
@@ -110,7 +110,7 @@ export function createNetworkView(root, { onSelectPathway, onSelectGene }) {
           shape: 'round-rectangle',
           label: 'data(label)',
           'text-wrap': 'wrap',
-          'text-max-width': 120,
+          'text-max-width': 130,
           'font-size': 10,
           color: '#fff',
           'text-valign': 'center',
@@ -148,8 +148,11 @@ export function createNetworkView(root, { onSelectPathway, onSelectGene }) {
       animate: false,
       fit: true,
       padding: 24,
-      nodeRepulsion: () => 9000,
-      idealEdgeLength: () => 90,
+      nodeRepulsion: () => 60000,
+      idealEdgeLength: () => 170,
+      nodeOverlap: 30,
+      gravity: 0.4,
+      numIter: 1500,
     }).run();
   }
 
@@ -261,17 +264,19 @@ export function createNetworkView(root, { onSelectPathway, onSelectGene }) {
       state.rows = rows;
       return refresh();
     },
-    // Highlights the selected pathway or gene node.
-    setSelection(selection) {
+    // Highlights the selected pathway node and the selected gene node (either may be null).
+    setSelection(pathwayId, geneId) {
       if (!cy) return;
       cy.elements().removeClass('sel');
-      if (!selection) return;
-      const id =
-        selection.type === 'pathway' ? `pw:${selection.id}` : `gene:${selection.id.toUpperCase()}`;
-      const node = cy.getElementById(id);
-      if (node.nonempty()) {
-        node.addClass('sel');
-        node.connectedEdges().addClass('sel');
+      for (const id of [
+        pathwayId && `pw:${pathwayId}`,
+        geneId && `gene:${geneId.toUpperCase()}`,
+      ].filter(Boolean)) {
+        const node = cy.getElementById(id);
+        if (node.nonempty()) {
+          node.addClass('sel');
+          node.connectedEdges().addClass('sel');
+        }
       }
     },
   };

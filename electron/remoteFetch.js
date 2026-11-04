@@ -96,7 +96,7 @@ async function fetchWithRetry(req, limiter, fetchImpl) {
   try {
     const out = await attempt(req, limiter, fetchImpl);
     if (req.method === 'GET' && (out.status === 429 || out.status >= 500)) {
-      await sleep(800);
+      await sleep(out.status === 429 ? 2500 : 800);
       return await attempt(req, limiter, fetchImpl);
     }
     return out;

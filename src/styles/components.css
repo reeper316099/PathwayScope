@@ -578,7 +578,7 @@ table.data tr.has-gene {
   height: 420px;
 }
 .network-box {
-  height: 440px;
+  height: 560px;
   border: 1px solid var(--border);
   border-radius: 10px;
   background: var(--surface);
@@ -809,4 +809,16 @@ dialog::backdrop {
 }
 .option input[type='number'] {
   width: 11em;
+}
+
+.examples-box {
+  margin: 6px 0 10px;
+}
+.examples-box summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.tree-card input[type='search'] {
+  width: 100%;
 }

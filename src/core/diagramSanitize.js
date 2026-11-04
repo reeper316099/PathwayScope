@@ -6,6 +6,8 @@ export const DATA_PNG = /^data:image\/png;base64,[A-Za-z0-9+/=\s]+$/;
 
 // Returns a sanitized SVG string (empty string if nothing safe remains). Only embedded PNG data: images are kept.
 export function sanitizeSvg(svgText, purifier = DOMPurify) {
+  // Remove inline style attributes from the RAW text first: parsing them would itself trip our strict CSP (style-src).
+  const text = svgText.replace(/\s+style\s*=\s*("[^"]*"|'[^']*')/gi, '');
   const hook = (node) => {
     for (const attr of ['href', 'xlink:href']) {
       const value = node.getAttribute?.(attr);
@@ -16,7 +18,7 @@ export function sanitizeSvg(svgText, purifier = DOMPurify) {
   };
   purifier.addHook('afterSanitizeAttributes', hook);
   try {
-    return purifier.sanitize(svgText, {
+    return purifier.sanitize(text, {
       USE_PROFILES: { svg: true },
       FORBID_TAGS: [
         'script',

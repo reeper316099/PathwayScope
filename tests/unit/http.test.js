@@ -1,8 +1,10 @@
 // Tests for the browser path of the HTTP adapter (fetch is stubbed; no network).
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { cache, getJson, getJsonWithMeta, HttpError } from '../../src/core/http.js';
+import { BROWSER_LIMITS, cache, getJson, getJsonWithMeta, HttpError } from '../../src/core/http.js';
 
+const saved = { ...BROWSER_LIMITS };
 afterEach(() => {
+  Object.assign(BROWSER_LIMITS, saved);
   vi.unstubAllGlobals();
   cache.clear();
 });
@@ -108,5 +110,75 @@ describe('getJson (Electron path via window.api)', () => {
     await expect(getJson('https://reactome.org/x', { signal: ac.signal })).rejects.toMatchObject({
       kind: 'aborted',
     });
+  });
+});
+
+describe('getJson (browser retry and throttling)', () => {
+  it('retries a GET once after a network failure (CDN rate limits often look like CORS errors)', async () => {
+    BROWSER_LIMITS.retryDelayMs = 0;
+    let calls = 0;
+    vi.stubGlobal('fetch', async () => {
+      calls += 1;
+      if (calls === 1) throw new TypeError('Failed to fetch');
+      return res('{"ok":1}');
+    });
+    expect(await getJson('https://x/retry')).toEqual({ ok: 1 });
+    expect(calls).toBe(2);
+  });
+  it('retries a GET once on HTTP 429 and 503, but not on 404', async () => {
+    BROWSER_LIMITS.retryDelayMs = 0;
+    for (const [status, expected] of [
+      [429, 2],
+      [503, 2],
+      [404, 1],
+    ]) {
+      let calls = 0;
+      vi.stubGlobal('fetch', async () => {
+        calls += 1;
+        return calls === 1 || status === 404 ? res('{}', { status }) : res('{"ok":1}');
+      });
+      await getJson(`https://x/${status}`).catch(() => {});
+      expect(calls).toBe(expected);
+    }
+  });
+  it('never retries a POST', async () => {
+    BROWSER_LIMITS.retryDelayMs = 0;
+    let calls = 0;
+    vi.stubGlobal('fetch', async () => {
+      calls += 1;
+      throw new TypeError('Failed to fetch');
+    });
+    await expect(getJson('https://x/post', { method: 'POST', body: 'a' })).rejects.toMatchObject({
+      kind: 'network',
+    });
+    expect(calls).toBe(1);
+  });
+  it('gives up after the single retry', async () => {
+    BROWSER_LIMITS.retryDelayMs = 0;
+    let calls = 0;
+    vi.stubGlobal('fetch', async () => {
+      calls += 1;
+      throw new TypeError('Failed to fetch');
+    });
+    await expect(getJson('https://x/dead')).rejects.toMatchObject({ kind: 'network' });
+    expect(calls).toBe(2);
+  });
+  it('limits concurrent requests per host and spaces them apart', async () => {
+    BROWSER_LIMITS.gapMs = 20;
+    BROWSER_LIMITS.maxInFlight = 2;
+    let active = 0;
+    let peak = 0;
+    const starts = [];
+    vi.stubGlobal('fetch', async () => {
+      active += 1;
+      peak = Math.max(peak, active);
+      starts.push(Date.now());
+      await new Promise((r) => setTimeout(r, 30));
+      active -= 1;
+      return res('{}');
+    });
+    await Promise.all(Array.from({ length: 6 }, (_, i) => getJson(`https://same.host/${i}`)));
+    expect(peak).toBeLessThanOrEqual(2);
+    expect(starts[5] - starts[0]).toBeGreaterThanOrEqual(80); // 5 gaps of ~20 ms, with timer slack
   });
 });

@@ -4,3 +4,6 @@ dist/
 release/
 .DS_Store
 coverage
+dist-web
+test-results
+playwright-report

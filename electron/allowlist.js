@@ -5,7 +5,7 @@ export const FETCH_HOSTS = new Set(['reactome.org', 'rest.uniprot.org', 'eutils.
 
 // Minimum gap between requests per host in ms (NCBI allows 3 requests/second without an API key).
 export const MIN_INTERVAL_MS = {
-  'reactome.org': 100,
+  'reactome.org': 150,
   'rest.uniprot.org': 100,
   'eutils.ncbi.nlm.nih.gov': 350,
 };

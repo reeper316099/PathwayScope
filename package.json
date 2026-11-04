@@ -31,7 +31,10 @@
     "dist": "npm run build:electron && electron-builder",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "test:e2e": "playwright test",
+    "build:web:e2e": "PS_OUT_DIR=../dist-web vite build --mode web",
+    "test:e2e": "npm run build:electron && playwright test",
+    "test:e2e:web": "playwright test --project=web",
+    "test:e2e:electron": "npm run build:electron && playwright test --project=electron",
     "lint": "eslint .",
     "format": "prettier --write ."
   },

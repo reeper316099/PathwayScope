@@ -10,12 +10,30 @@ const noEval = {
 };
 
 export default [
-  { ignores: ['dist/**', 'release/**', 'scratch/**', 'node_modules/**', 'docs/**'] },
+  {
+    ignores: [
+      'dist/**',
+      'dist-web/**',
+      'test-results/**',
+      'playwright-report/**',
+      'coverage/**',
+      'release/**',
+      'scratch/**',
+      'node_modules/**',
+      'docs/**',
+    ],
+  },
   js.configs.recommended,
   { rules: noEval },
   { files: ['src/**/*.js'], languageOptions: { globals: { ...globals.browser } } },
   {
-    files: ['electron/**/*.js', 'scripts/**/*.mjs', 'vite.config.js', 'eslint.config.js'],
+    files: [
+      'electron/**/*.js',
+      'scripts/**/*.mjs',
+      'vite.config.js',
+      'eslint.config.js',
+      'playwright.config.js',
+    ],
     languageOptions: { globals: { ...globals.node } },
   },
   {

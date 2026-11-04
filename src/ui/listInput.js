@@ -48,6 +48,20 @@ export function createListInput(root, { onRun, onCancel, onCutoff }) {
     h('p', { class: 'hint' }, 'You can also drag a .txt, .csv or .tsv file onto the box.'),
   );
   const examples = h('div', { class: 'examples' });
+  // Example lists are fetched only when this section is opened (about 9 requests, so not on every visit).
+  const examplesBox = h(
+    'details',
+    { class: 'examples-box' },
+    h('summary', {}, 'Example lists (built live from real Reactome pathways)'),
+    examples,
+  );
+  let examplesLoaded = false;
+  examplesBox.addEventListener('toggle', () => {
+    if (examplesBox.open && !examplesLoaded) {
+      examplesLoaded = true;
+      loadExamples();
+    }
+  });
 
   const project = h('input', {
     id: 'opt-project',
@@ -226,7 +240,7 @@ export function createListInput(root, { onRun, onCancel, onCutoff }) {
 
   root.append(
     h('h2', {}, 'Your gene list'),
-    examples,
+    examplesBox,
     drop,
     sourceNote,
     preview,
@@ -275,7 +289,6 @@ export function createListInput(root, { onRun, onCancel, onCutoff }) {
     progress,
   );
   update();
-  loadExamples();
 
   return {
     // Switches the Run/Cancel buttons and shows progress text while an analysis is running.

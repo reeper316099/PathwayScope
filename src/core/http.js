@@ -93,17 +93,34 @@ async function viaElectron(url, opts) {
   throw new HttpError(kind, reply.error);
 }
 
-// Browser path: memory/localStorage cache, then fetch() with timeout; on network failure fall back to a stale copy.
-async function viaBrowser(url, opts) {
-  if (opts.signal?.aborted) throw new HttpError('aborted', 'Request cancelled.');
-  const key = requestKey(opts.method, url, opts.body);
-  if (opts.ttl > 0) {
-    const hit = cache.get(key);
-    if (hit) return { data: hit.value, cachedAt: hit.cachedAt, fromCache: true, stale: false };
-  }
+// Browser-side politeness: at most a few requests per host in flight, spaced apart (mirrors the Electron main process).
+export const BROWSER_LIMITS = { gapMs: 120, retryDelayMs: 1500, maxInFlight: 4 };
+const hostState = new Map();
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// Waits for this host's next free slot and an in-flight place; returns a function that releases the place.
+async function acquire(url) {
+  const host = new URL(url, globalThis.location?.href ?? 'http://localhost').host;
+  const st = hostState.get(host) ?? { next: 0, active: 0, waiters: [] };
+  hostState.set(host, st);
+  while (st.active >= BROWSER_LIMITS.maxInFlight)
+    await new Promise((resolve) => st.waiters.push(resolve));
+  st.active += 1;
+  const start = Math.max(Date.now(), st.next);
+  st.next = start + BROWSER_LIMITS.gapMs;
+  if (start > Date.now()) await sleep(start - Date.now());
+  return () => {
+    st.active -= 1;
+    st.waiters.shift()?.();
+  };
+}
+
+// One browser fetch attempt with timeout; throws HttpError for HTTP errors and a plain 'network'/'timeout' HttpError otherwise.
+async function browserAttempt(url, opts) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), opts.timeoutMs);
   opts.signal?.addEventListener('abort', () => controller.abort(), { once: true });
+  const release = await acquire(url);
   try {
     const res = await fetch(url, {
       method: opts.method,
@@ -121,20 +138,52 @@ async function viaBrowser(url, opts) {
       }
     }
     if (!res.ok) throw new HttpError('http', `HTTP ${res.status}`, { status: res.status, data });
-    if (opts.ttl > 0) cache.set(key, data, opts.ttl);
-    return { data, cachedAt: null, fromCache: false, stale: false };
+    return data;
   } catch (error) {
     if (error instanceof HttpError) throw error;
     if (opts.signal?.aborted) throw new HttpError('aborted', 'Request cancelled.');
-    const stale = opts.ttl > 0 ? cache.get(key, { allowStale: true }) : null;
-    if (stale) return { data: stale.value, cachedAt: stale.cachedAt, fromCache: true, stale: true };
     if (controller.signal.aborted) throw new HttpError('timeout', 'Request timed out.');
     throw new HttpError(
       'network',
       'Network request failed (offline, or the source blocks browser access).',
     );
   } finally {
+    release();
     clearTimeout(timer);
+  }
+}
+
+// Browser path: memory/localStorage cache, then fetch with one retry for GET (a rate-limit 429 from a CDN often shows up as a
+// CORS/network error), and a stale-cache fallback when the network is down.
+async function viaBrowser(url, opts) {
+  if (opts.signal?.aborted) throw new HttpError('aborted', 'Request cancelled.');
+  const key = requestKey(opts.method, url, opts.body);
+  if (opts.ttl > 0) {
+    const hit = cache.get(key);
+    if (hit) return { data: hit.value, cachedAt: hit.cachedAt, fromCache: true, stale: false };
+  }
+  const retriable = (e) =>
+    opts.method === 'GET' &&
+    (e.kind === 'network' || (e.kind === 'http' && (e.status === 429 || e.status >= 500)));
+  try {
+    let data;
+    try {
+      data = await browserAttempt(url, opts);
+    } catch (error) {
+      if (!(error instanceof HttpError) || !retriable(error)) throw error;
+      await sleep(BROWSER_LIMITS.retryDelayMs);
+      if (opts.signal?.aborted) throw new HttpError('aborted', 'Request cancelled.');
+      data = await browserAttempt(url, opts);
+    }
+    if (opts.ttl > 0) cache.set(key, data, opts.ttl);
+    return { data, cachedAt: null, fromCache: false, stale: false };
+  } catch (error) {
+    if (error instanceof HttpError && error.kind === 'network') {
+      const stale = opts.ttl > 0 ? cache.get(key, { allowStale: true }) : null;
+      if (stale)
+        return { data: stale.value, cachedAt: stale.cachedAt, fromCache: true, stale: true };
+    }
+    throw error;
   }
 }
 

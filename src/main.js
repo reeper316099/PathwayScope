@@ -1,5 +1,4 @@
 // App bootstrap: hash router for the three modes, shared pathway detail drawer, menu/shortcut actions, offline banner.
-import { ageLabel } from './core/cache.js';
 import { cache, isElectron, onRequestMeta } from './core/http.js';
 import { getDatabaseInfo } from './core/reactomeContent.js';
 import { createEnrichmentView } from './ui/enrichmentView.js';
@@ -9,7 +8,7 @@ import { cacheLabel, setBanner, toast } from './ui/cards.js';
 import { mountHistory } from './ui/history.js';
 import { createPathwayDetail } from './ui/pathwayDetail.js';
 import { mountGlobalSearch } from './ui/search.js';
-import { getSelection, onSelection, select } from './ui/selection.js';
+import { getSelected, onSelection, select } from './ui/selection.js';
 import { initTheme, toggleTheme } from './ui/theme.js';
 
 const MODES = ['explorer', 'enrichment', 'browser'];
@@ -40,7 +39,7 @@ const ctx = {
       history.replaceState(null, '', `#/browser/${stId}`);
   },
   navigateGene: (symbol) => go('explorer', symbol),
-  currentPathway: () => (getSelection()?.type === 'pathway' ? getSelection().id : null),
+  currentPathway: () => getSelected('pathway'),
 };
 
 // Creates a view the first time its mode is shown.
@@ -151,14 +150,17 @@ function bindExternalLinks() {
   });
 }
 
-// Page-wide offline / blocked banner driven by every request outcome.
+// Page-wide offline / blocked banner driven by every request outcome and by the browser's online/offline events.
 function bindBanner() {
+  let lastCachedAt = null;
+  // Banner text for "offline, but cached data is shown".
+  const offlineText = () =>
+    `Offline: showing cached data${lastCachedAt ? ` from ${new Date(lastCachedAt).toLocaleString()}` : ''}. Anything that was never cached cannot be loaded until you are back online.`;
   onRequestMeta((event) => {
-    if (event.type === 'ok' && event.stale)
-      setBanner(
-        `Offline: showing cached data from ${new Date(event.cachedAt).toLocaleString()} (${ageLabel(event.cachedAt)}).`,
-      );
-    else if (event.type === 'ok' && !event.fromCache) setBanner(null);
+    if (event.type === 'ok' && event.fromCache && event.cachedAt) {
+      lastCachedAt = event.cachedAt;
+      if (event.stale || !navigator.onLine) setBanner(offlineText());
+    } else if (event.type === 'ok' && !event.fromCache) setBanner(null);
     else if (event.type === 'error' && event.error.kind === 'network') {
       setBanner(
         isElectron()
@@ -169,6 +171,9 @@ function bindBanner() {
       );
     }
   });
+  window.addEventListener('offline', () => setBanner(offlineText()));
+  window.addEventListener('online', () => setBanner(null));
+  if (!navigator.onLine) setBanner(offlineText());
 }
 
 let search;

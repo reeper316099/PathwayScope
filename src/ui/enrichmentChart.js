@@ -31,7 +31,7 @@ const TOP_N_CHOICES = [10, 15, 20, 30];
 const cssVar = (name) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 
 // Shortens long pathway names for axis labels (full name stays in the tooltip).
-const shorten = (text, max = 46) => (text.length > max ? `${text.slice(0, max - 1)}…` : text);
+const shorten = (text, max = 38) => (text.length > max ? `${text.slice(0, max - 1)}…` : text);
 
 // Creates the chart card contents inside `root`. callbacks: { onSelect(stId) }. Returns { update, setSelected }.
 export function createEnrichmentChart(root, { onSelect }) {
@@ -119,8 +119,9 @@ export function createEnrichmentChart(root, { onSelect }) {
     chart?.destroy();
     chart = null;
     const rows = state.rows.slice(0, state.topN);
+    const capped = rows.filter((r) => negLog10(r.fdr) >= NEG_LOG10_CAP).length;
     note.textContent = rows.length
-      ? `Axis: −log10 of the FDR (Benjamini-Hochberg), capped at ${NEG_LOG10_CAP} (Reactome's numerical precision floor). Click a ${state.mode === 'bar' ? 'bar' : 'bubble'} to select that pathway.`
+      ? `Axis: −log10 of the FDR (Benjamini-Hochberg), capped at ${NEG_LOG10_CAP} (Reactome's numerical precision floor). ${capped > 1 ? `${capped} of these ${rows.length} pathways sit at that floor, so their bars have the same length; the bubble chart separates them by ratio. ` : ''}Click a ${state.mode === 'bar' ? 'bar' : 'bubble'} to select that pathway.`
       : 'No pathways to chart at the current FDR cutoff.';
     if (rows.length === 0) return;
     const c = colors();
