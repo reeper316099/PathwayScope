@@ -171,9 +171,15 @@ export function deriveBackgroundSize(sample) {
 export async function runAnalysis(
   identifiers,
   parameters = DEFAULT_PARAMETERS,
-  { onProgress, ...options } = {},
+  { onProgress, sessionId, ...callerOptions } = {},
 ) {
   const params = { ...DEFAULT_PARAMETERS, ...parameters };
+  // Every cached response of this analysis is tagged with its session id so "Home" can group, size and delete it as one item.
+  const id = sessionId ?? newId();
+  const options = {
+    ...callerOptions,
+    owners: [...new Set([...(callerOptions.owners ?? []), `analysis:${id}`])],
+  };
   onProgress?.(`Submitting ${identifiers.length} identifiers to Reactome…`);
   const submitted = await submitAnalysis(identifiers, params, options);
   const token = decodeURIComponent(submitted.summary.token);
@@ -184,7 +190,7 @@ export async function runAnalysis(
     getDatabaseInfo(options).catch(() => null),
   ]);
   return {
-    id: newId(),
+    id,
     createdAt: new Date().toISOString(),
     inputIdentifiers: [...identifiers],
     unmappedIdentifiers: unmapped,
@@ -229,7 +235,10 @@ export async function refreshSessionIfExpired(session, options = {}) {
 
 // Re-runs a stored session's identifiers; keeps its id/createdAt and reports if the Reactome release changed.
 async function rerun(session, options) {
-  const fresh = await runAnalysis(session.inputIdentifiers, session.parameters, options);
+  const fresh = await runAnalysis(session.inputIdentifiers, session.parameters, {
+    ...options,
+    sessionId: session.id,
+  });
   const updated = { ...fresh, id: session.id, createdAt: session.createdAt };
   return {
     session: updated,

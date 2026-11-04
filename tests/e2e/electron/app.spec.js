@@ -7,14 +7,15 @@ const list50 = fs.readFileSync(new URL('../../fixtures/gene-list-50.txt', import
 
 test.describe.configure({ mode: 'serial' });
 
-test('launches with the right title, size limits and an empty three-mode shell', async () => {
-  const { app, win, errors } = await launch();
+test('launches on Home with the right title, size limits and the five-tab shell', async () => {
+  const { app, win, errors } = await launch(undefined, { home: true });
+  await expect(win.locator('[data-view=home]')).toBeVisible();
   expect(await win.title()).toBe('PathwayScope');
   expect(
     await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0].getMinimumSize()),
   ).toEqual([1000, 700]);
   expect(await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows().length)).toBe(1);
-  for (const mode of ['explorer', 'enrichment', 'browser', 'settings']) {
+  for (const mode of ['home', 'explorer', 'enrichment', 'browser', 'settings']) {
     await win.click(`a[data-mode=${mode}]`);
     await expect(win.locator(`[data-view=${mode}]`)).toBeVisible();
   }
@@ -53,7 +54,9 @@ test('security: sandboxed renderer, no Node, strict CSP, blocked navigation/wind
     'listCache',
     'onMenuAction',
     'openExternal',
+    'removeCacheOwner',
     'saveFile',
+    'setCachePinned',
   ]);
   // the CSP is present and eval is really blocked
   expect(
@@ -177,7 +180,7 @@ test('gene search and enrichment work through the IPC path (GET and POST), with 
   const remoteRequests = [];
   win.on('request', (r) => /^https?:/.test(r.url()) && remoteRequests.push(r.url()));
   await win.fill('#gene-input', 'TP53');
-  await win.click('.inline-form .btn');
+  await win.click('[data-view=explorer] .inline-form .btn');
   await expect(win.locator('.gene-title')).toHaveText('TP53', { timeout: 60_000 });
   await expect(win.locator('.gene-card')).toContainText(/ClinVar: [\d,]+ records/, {
     timeout: 60_000,
@@ -236,7 +239,7 @@ test('cache, history and saved sessions persist across restarts; the footer show
   const userData = newUserData();
   let run = await launch(userData);
   await run.win.fill('#gene-input', 'BRCA1');
-  await run.win.click('.inline-form .btn');
+  await run.win.click('[data-view=explorer] .inline-form .btn');
   await expect(run.win.locator('.gene-title')).toHaveText('BRCA1', { timeout: 60_000 });
   await runEnrichment(run.win, 'TP53\nBRCA1\nATM\nCHEK2\nEGFR');
   const factsBefore = await run.win.locator('.results .facts').innerText();
@@ -263,7 +266,7 @@ test('offline mode: cached genes and saved sessions still work, with the Offline
   const userData = newUserData();
   let run = await launch(userData);
   await run.win.fill('#gene-input', 'TP53');
-  await run.win.click('.inline-form .btn');
+  await run.win.click('[data-view=explorer] .inline-form .btn');
   await expect(run.win.locator('.gene-title')).toHaveText('TP53', { timeout: 60_000 });
   await expect(run.win.locator('.gene-card')).toContainText(/ClinVar: [\d,]+ records/, {
     timeout: 60_000,
@@ -284,13 +287,13 @@ test('offline mode: cached genes and saved sessions still work, with the Offline
   // a cached gene still loads
   await run.win.click('a[data-mode=explorer]');
   await run.win.fill('#gene-input', 'TP53');
-  await run.win.click('.inline-form .btn');
+  await run.win.click('[data-view=explorer] .inline-form .btn');
   await expect(run.win.locator('.gene-title')).toHaveText('TP53', { timeout: 60_000 });
   await expect(run.win.locator('.pathway-item').first()).toBeAttached();
   await expect(run.win.locator('#banner')).toContainText(/Offline: showing cached data from /);
   // an uncached gene gives a friendly error, not a crash
   await run.win.fill('#gene-input', 'KRAS');
-  await run.win.click('.inline-form .btn');
+  await run.win.click('[data-view=explorer] .inline-form .btn');
   await expect(run.win.locator('.explorer-result .state.error')).toContainText(
     'Could not reach the data source',
     { timeout: 60_000 },

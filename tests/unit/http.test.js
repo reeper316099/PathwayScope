@@ -86,6 +86,20 @@ describe('getJson (Electron path via window.api)', () => {
       timeoutMs: 5000,
       label: 'Cached POST response from reactome.org',
       kind: 'other',
+      owners: [],
+    });
+  });
+  it('passes the owner tags of a lookup to the main process', async () => {
+    const fetchJson = vi.fn(async () => ({ ok: true, data: {} }));
+    withApi(fetchJson);
+    await getJson('https://reactome.org/ContentService/search/query?query=TP53', {
+      ttl: 60,
+      owners: ['gene:TP53'],
+    });
+    expect(fetchJson.mock.calls[0][1]).toMatchObject({
+      owners: ['gene:TP53'],
+      label: 'Gene search: TP53',
+      kind: 'gene',
     });
   });
   it('maps main-process errors to HttpError kinds', async () => {

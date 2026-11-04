@@ -102,7 +102,7 @@ test.describe('mobile viewport 390x844', () => {
     { tag: '@hermetic' },
     async ({ page }) => {
       await page.goto('/#/explorer');
-      const tabs = page.locator('.rail .modes a');
+      const tabs = page.locator('.rail .modes li:not([hidden]) a'); // the website has four tabs (Home is desktop-only)
       await expect(tabs).toHaveCount(4);
       for (const box of await tabs.evaluateAll((els) =>
         els.map((e) => {
@@ -123,3 +123,20 @@ test.describe('mobile viewport 390x844', () => {
     },
   );
 });
+
+test(
+  'the website has no Home page: the logo and the start page stay on Gene Explorer',
+  { tag: '@hermetic' },
+  async ({ page }) => {
+    await page.goto('/');
+    await expect(page.locator('[data-view=explorer]')).toBeVisible();
+    await expect(page.locator('a[data-mode=home]')).toBeHidden();
+    await expect(page.locator('#brand-link')).toHaveAttribute('href', '#/explorer');
+    await page.goto('/#/home'); // an unknown route falls back to the start page
+    await page.reload();
+    await expect(page.locator('[data-view=explorer]')).toBeVisible();
+    await expect(page.locator('[data-view=home]')).toBeHidden();
+    await page.locator('#brand-link').click();
+    await expect(page).toHaveURL(/#\/explorer/);
+  },
+);

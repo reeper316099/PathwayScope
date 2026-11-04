@@ -7,12 +7,21 @@ import { sigBadge } from './badges.js';
 import { emptyState, errorState, friendlyError, skeleton, warningNote } from './cards.js';
 import { createDiagramView } from './diagramView.js';
 import { debounce, externalLink, h, setChildren } from './dom.js';
-import { getHierarchyOnce, loadFound, state, store, userIdentifierSet, emit } from './state.js';
+import { ownerId } from '../core/library.js';
+import {
+  emit,
+  getHierarchyOnce,
+  loadFound,
+  state,
+  store,
+  touchLibrary,
+  userIdentifierSet,
+} from './state.js';
 
 const PARTICIPANT_PAGE = 100;
 
 // Creates a detail panel inside `root`. callbacks: { onOpenPathway(stId) }. Returns { show(stId), clear() }.
-export function createPathwayDetail(root, { onOpenPathway }) {
+export function createPathwayDetail(root, { onOpenPathway, getOwners = () => [] }) {
   let controller = null;
   let currentId = null;
   let diagramRef = null;
@@ -108,6 +117,8 @@ export function createPathwayDetail(root, { onOpenPathway }) {
     controller = new AbortController();
     const { signal } = controller;
     currentId = stId;
+    // Everything fetched for this pathway belongs to the pathway item and to whatever the user was working in (a gene or an analysis).
+    const owners = [...new Set([ownerId('pathway', stId), ...getOwners()])];
     const header = h('div', { class: 'detail-head' });
     const summaryBox = h('div', { class: 'section' }, skeleton(3));
     const subBox = h('div', { class: 'section' });
@@ -121,9 +132,10 @@ export function createPathwayDetail(root, { onOpenPathway }) {
     diagramRef = diagram;
 
     try {
-      const details = await getPathwayDetails(stId, { signal });
+      const details = await getPathwayDetails(stId, { signal, owners });
       if (signal.aborted) return;
       const { pathway } = details;
+      touchLibrary({ type: 'pathway', key: stId, label: pathway.name });
       store.addHistory({ type: 'pathway', key: stId, label: pathway.name });
       emit('history-changed');
       const row = state.session?.rows.find((r) => r.stId === stId);
@@ -239,7 +251,7 @@ export function createPathwayDetail(root, { onOpenPathway }) {
             )
           : h('p', { class: 'muted' }, 'No references listed.'),
       );
-      diagram.show(stId, { hasDiagram: pathway.hasDiagram, name: pathway.name });
+      diagram.show(stId, { hasDiagram: pathway.hasDiagram, name: pathway.name, owners });
     } catch (error) {
       if (signal.aborted) return;
       setChildren(
@@ -253,7 +265,7 @@ export function createPathwayDetail(root, { onOpenPathway }) {
     try {
       const hasSession = Boolean(state.session);
       const [rows, found] = await Promise.all([
-        getParticipants(stId, { signal }),
+        getParticipants(stId, { signal, owners }),
         hasSession ? loadFound(stId, { signal }).catch((e) => e) : Promise.resolve(null),
       ]);
       if (signal.aborted || currentId !== stId) return;

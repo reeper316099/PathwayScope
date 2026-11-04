@@ -44,7 +44,10 @@ export function createBrowserView(root, ctx) {
     tree?.setSelected(stId);
     if (!detail) {
       setChildren(detailBox);
-      detail = createPathwayDetail(detailBox, { onOpenPathway: ctx.openPathway });
+      detail = createPathwayDetail(detailBox, {
+        onOpenPathway: ctx.openPathway,
+        getOwners: ctx.contextOwners,
+      });
     }
     detail.show(stId);
   }

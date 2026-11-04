@@ -79,6 +79,7 @@ async function viaElectron(url, opts) {
       timeoutMs: opts.timeoutMs,
       label: opts.label.label,
       kind: opts.label.kind,
+      owners: opts.owners,
     }),
     opts.signal,
   );
@@ -193,7 +194,7 @@ async function viaBrowser(url, opts) {
 // Fetches a URL and returns { data, cachedAt, fromCache, stale } so the UI can show "cached 2 days ago".
 export function getJsonWithMeta(
   url,
-  { method = 'GET', headers = {}, body, ttl = 0, timeoutMs = 20_000, signal } = {},
+  { method = 'GET', headers = {}, body, ttl = 0, timeoutMs = 20_000, signal, owners = [] } = {},
 ) {
   if (method !== 'GET' && method !== 'POST')
     throw new HttpError('blocked', 'Only GET and POST are supported.');
@@ -204,6 +205,7 @@ export function getJsonWithMeta(
     ttl,
     timeoutMs,
     signal,
+    owners,
     label: describeRequest(method, url, body),
   };
   const pending = isElectron() ? viaElectron(url, opts) : viaBrowser(url, opts);

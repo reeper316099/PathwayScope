@@ -5,7 +5,7 @@ An interactive pathway explorer built on the [Reactome](https://reactome.org) kn
 > **Educational and research-exploration use only. Not medical advice.** Pathway enrichment is hypothesis-generating, not proof.
 
 - **Download:** [GitHub Releases](https://github.com/reeper316099/PathwayScope/releases) (installers are **unsigned**, see [Unsigned apps](#unsigned-apps-what-you-will-see-and-how-to-open-them))
-- **Live demo:** https://reeper316099.github.io/PathwayScope/ (available after the first Pages deployment)
+- **Live demo:** https://reeper316099.github.io/PathwayScope/
 
 ## Screenshots
 
@@ -13,24 +13,41 @@ An interactive pathway explorer built on the [Reactome](https://reactome.org) kn
 | -------------------------------------------------------- | ------------------------------------------------------- | --------------------------------------------------------- |
 | ![Gene Explorer](docs/screenshots/electron-explorer.png) | ![Enrichment](docs/screenshots/electron-enrichment.png) | ![Pathway Browser](docs/screenshots/electron-browser.png) |
 
+**Home (desktop app)** is your library: everything you have looked up as one card each, with its size, folders and pinning.
+
+![Home](docs/screenshots/electron-home.png)
+
 More (dark mode, mobile web, the Settings page) are in [`docs/screenshots/`](docs/screenshots).
+
+## Home: your library (desktop app)
+
+The desktop app opens on **Home** (also reachable from the logo and the sidebar). Instead of a flat pile of cached files, it shows what _you_ did:
+
+- **One card per thing you looked up** (a gene, a pathway, an analysis) with how much space it needs. Behind the scenes every cached response is tagged with the item that caused it, so "TP53" owns its gene search, protein name, ClinVar count, interactors and pathway list.
+- **Shared data is shown separately** (for example the 3.9 MB pathway hierarchy every lookup uses), and deleting one item never removes data another item still needs.
+- **Folders, nested and as many levels as you like.** Drag a card onto a folder, or use "Folders…". An item can be in several folders (the folder holds a shortcut, not a copy); deleting a folder never deletes its items.
+- **Pin** an item to keep it: its stored data becomes a frozen snapshot that is served even when it is old or you are offline, and "Free up space" skips it.
+- **Free up space** deletes every unpinned item at once; a storage bar shows pinned, other, shared and unsorted data.
+- Deleting an item always asks first and tells you how much it frees and what stays.
+
+The website has no Home page (its storage is small and temporary); it opens on Gene Explorer as before. **Settings → Stored data** remains the technical view of the raw cache.
 
 ## What has actually been tested (and what has not)
 
-This table is updated only with things that were really run. "UNTESTED LOCALLY, verified only by CI" stays until a real GitHub Actions run passes.
+This table is updated only with things that were really run. "Built by CI, never launched by us" means the GitHub Actions build succeeded but nobody has actually started that installer on that operating system yet: please run the manual checklist below.
 
-| Target                                     | Built locally                           | Run locally                                                                                                                                                                                                                                                                                            | Status                                    |
-| ------------------------------------------ | --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------- |
-| Web app (Chrome)                           | yes                                     | yes: 37 end-to-end tests against live Reactome                                                                                                                                                                                                                                                         | **ran and passed**                        |
-| macOS arm64 desktop app                    | yes (`.dmg`, ad-hoc signed)             | yes: packaged app ran a gene search and a 50-gene enrichment                                                                                                                                                                                                                                           | **ran and passed**                        |
-| Desktop app via `electron .` (macOS arm64) | n/a                                     | yes: 8 end-to-end tests (security, IPC, persistence, offline)                                                                                                                                                                                                                                          | **ran and passed**                        |
-| macOS x64 `.dmg`                           | yes (cross-built on arm64)              | no                                                                                                                                                                                                                                                                                                     | **UNTESTED LOCALLY, verified only by CI** |
-| Windows x64 installer + portable           | yes (cross-built on macOS, config only) | no                                                                                                                                                                                                                                                                                                     | **UNTESTED LOCALLY, verified only by CI** |
-| Linux x64 AppImage + `.deb`                | yes (cross-built on macOS, config only) | no                                                                                                                                                                                                                                                                                                     | **UNTESTED LOCALLY, verified only by CI** |
-| GitHub Pages site (live)                   | n/a                                     | yes: real TP53 lookup and enrichment run on the deployed site                                                                                                                                                                                                                                          | **ran and passed**                        |
-| `pages.yml` workflow                       | n/a                                     | ran on GitHub (3 Nov 2026)                                                                                                                                                                                                                                                                             | **ran and passed**                        |
-| `ci.yml` workflow                          | n/a                                     | first GitHub run: install, lint, format, unit tests, web build and Playwright setup passed; its live end-to-end step failed because Reactome's CDN rate-limited the runner (HTTP 429). It now runs only the hermetic tests (verified locally with the live services blocked); not yet re-run on GitHub | **partly verified**                       |
-| `release.yml` workflow                     | n/a                                     | not run yet (needs a `v*` tag)                                                                                                                                                                                                                                                                         | **not run**                               |
+| Target                                     | Built locally                                | Run locally                                                                                                                                                                                                                  | Status                                |
+| ------------------------------------------ | -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------- |
+| Web app (Chrome)                           | yes                                          | yes: 46 end-to-end tests (15 need no live data, the rest use live Reactome)                                                                                                                                                  | **ran and passed**                    |
+| macOS arm64 desktop app                    | yes (`.dmg`, ad-hoc signed)                  | yes: packaged app ran a gene search and a 50-gene enrichment                                                                                                                                                                 | **ran and passed**                    |
+| Desktop app via `electron .` (macOS arm64) | n/a                                          | yes: 20 end-to-end tests (Home/library, security, IPC, persistence, offline)                                                                                                                                                 | **ran and passed**                    |
+| macOS x64 `.dmg`                           | yes (cross-built on arm64; also built by CI) | no                                                                                                                                                                                                                           | **built by CI, never launched by us** |
+| Windows x64 installer + portable           | built by CI (v0.1.0)                         | no                                                                                                                                                                                                                           | **built by CI, never launched by us** |
+| Linux x64 AppImage + `.deb`                | built by CI (v0.1.0)                         | no                                                                                                                                                                                                                           | **built by CI, never launched by us** |
+| GitHub Pages site (live)                   | n/a                                          | yes: real TP53 lookup and enrichment run on the deployed site                                                                                                                                                                | **ran and passed**                    |
+| `pages.yml` workflow                       | n/a                                          | ran on GitHub (3 Nov 2026)                                                                                                                                                                                                   | **ran and passed**                    |
+| `ci.yml` workflow                          | n/a                                          | ran on GitHub: lint, format, unit tests, web build and the hermetic end-to-end tests (the first run failed because Reactome's CDN rate-limited the runner during live tests; fixed by running only the hermetic tests in CI) | **ran and passed**                    |
+| `release.yml` workflow                     | n/a                                          | ran on GitHub for tag v0.1.0: built on Ubuntu, Windows and macOS and published 6 installers plus `SHA256SUMS.txt`                                                                                                            | **ran and passed**                    |
 
 ## How it works
 
@@ -43,7 +60,7 @@ This table is updated only with things that were really run. "UNTESTED LOCALLY, 
                      in Electron   │                                             │   in a browser (web)
                                    ▼                                             ▼
         window.api.fetchJson ──IPC──► main process                       fetch() + throttle + retry
-        (contextBridge, 7 functions)   host allowlist · https only        (needs the API to allow CORS)
+        (contextBridge, 9 functions)   host allowlist · https only        (needs the API to allow CORS)
                                        GET/POST only · size caps
                                        per-host rate limit · disk cache
                                                 │
@@ -184,10 +201,22 @@ The installers are **not code-signed and not notarized** (that needs paid develo
 
 **Linux:** make the AppImage executable (`chmod +x PathwayScope-*.AppImage`) and run it, or install the `.deb` with `sudo apt install ./PathwayScope-*.deb`. On Ubuntu 22.04 and newer the AppImage may need `sudo apt install libfuse2`. On Ubuntu 24.04 and newer, AppArmor can block Electron's sandbox for AppImages; the `.deb` sets up the sandbox helper itself. (Linux builds are untested locally.)
 
+## Manual checklist after a release
+
+Things automated tests cannot do (native dialogs, real keystrokes, other operating systems). Tick them off on each OS you have:
+
+1. Download an installer from the Releases page and check it against `SHA256SUMS.txt` (`shasum -a 256 <file>` on a Mac).
+2. Open it (see the unsigned-app steps above), launch the app, and confirm it opens on **Home**.
+3. Look up **TP53** in Gene Explorer, run an enrichment analysis with a pasted gene list, open a pathway with a diagram.
+4. On Home: see the TP53 card with a size, **Pin** it, create a **folder**, drag the card into it, then delete a second item and check the numbers.
+5. **File → Save Session** and **Open Session** (native dialogs), and **File → Show Data Folder**.
+6. Press Cmd/Ctrl+K, Cmd/Ctrl+Shift+H, Cmd/Ctrl+1 to 4 and Cmd/Ctrl+D.
+7. Turn off your network and check that a cached gene and a saved analysis still open with the "Offline" banner.
+
 ## Security notes
 
 - Electron windows use `contextIsolation: true`, `nodeIntegration: false`, `sandbox: true`, a strict Content-Security-Policy (`default-src 'none'`, scripts and styles only from the app itself, no `eval`, no inline scripts), no remote code, denied permission requests, blocked navigation and blocked new windows.
-- The page can call exactly seven functions (`fetchJson`, `saveFile`, `openExternal`, `getAppInfo`, `listCache`, `deleteCacheEntry`, `onMenuAction`). All arguments are validated again in the main process.
+- The page can call exactly nine functions (`fetchJson`, `saveFile`, `openExternal`, `getAppInfo`, `listCache`, `deleteCacheEntry`, `removeCacheOwner`, `setCachePinned`, `onMenuAction`). All arguments are validated again in the main process.
 - Network access: the main process only talks to `reactome.org`, `rest.uniprot.org` and `eutils.ncbi.nlm.nih.gov` over https, GET and POST only (POST only to the Analysis Service), with size caps, timeouts, rate limiting and redirect re-checking. Links open in your browser only for an allowlist of hosts.
 - Reactome's diagrams are SVG; they are sanitized (DOMPurify plus extra rules: no scripts, no foreign content, only embedded PNG data URLs) before being inlined.
 - Your data stays on your device (see **Settings → Stored data** in the app, or File → Manage Stored Data). Gene symbols and lists you enter are sent to the public Reactome, UniProt and NCBI services to look them up, and nowhere else.

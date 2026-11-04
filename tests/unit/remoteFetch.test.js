@@ -4,12 +4,27 @@ import { RateLimiter, performFetch } from '../../electron/remoteFetch.js';
 import { validateFetchRequest } from '../../electron/validate.js';
 
 // In-memory stand-in for DiskCache.
-function memCache() {
+function memCache(pinnedOwners = []) {
   const m = new Map();
+  const metas = new Map();
   return {
     read: async (k) => m.get(k) ?? null,
-    write: async (k, v) => void m.set(k, v),
+    write: async (k, v, meta) => {
+      m.set(k, v);
+      metas.set(k, {
+        ...meta,
+        owners: [...new Set([...(metas.get(k)?.owners ?? []), ...(meta?.owners ?? [])])],
+      });
+    },
+    readMeta: async (k) => metas.get(k) ?? null,
+    isPinned: async (owners = []) => owners.some((o) => pinnedOwners.includes(o)),
+    addOwners: async (k, owners) => {
+      const meta = metas.get(k);
+      if (meta)
+        metas.set(k, { ...meta, owners: [...new Set([...(meta.owners ?? []), ...owners])] });
+    },
     size: () => m.size,
+    metas,
   };
 }
 // Builds a minimal fetch Response-like object from text.
@@ -139,5 +154,97 @@ describe('RateLimiter', () => {
       l.nextSlot.set('h', before + 100);
     }
     expect(slots).toEqual([0, 100, 200]);
+  });
+});
+
+describe('performFetch with owners and pins', () => {
+  const owned = (owners) =>
+    validateFetchRequest(GET, {
+      cacheTtlSeconds: 1,
+      label: 'Release info',
+      kind: 'shared',
+      owners,
+    });
+  it('stores owners with a new entry and adds new owners when a cached entry is reused', async () => {
+    const cache = memCache();
+    const fetchImpl = vi.fn(async () => reply('{"a":1}'));
+    await performFetch(owned(['gene:TP53']), { cache, limiter: limiter(), fetchImpl });
+    const second = await performFetch(owned(['gene:BRCA1']), {
+      cache,
+      limiter: limiter(),
+      fetchImpl,
+    });
+    expect(second.fromCache).toBe(true);
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+    expect([...cache.metas.values()][0]).toMatchObject({
+      label: 'Release info',
+      kind: 'shared',
+      owners: ['gene:TP53', 'gene:BRCA1'],
+    });
+  });
+  it('serves a pinned entry from the cache however old it is (a frozen snapshot) without touching the network', async () => {
+    const cache = memCache(['gene:TP53']);
+    let t = 1000;
+    const fetchImpl = vi.fn(async () => reply('{"v":1}'));
+    await performFetch(owned(['gene:TP53']), {
+      cache,
+      limiter: limiter(),
+      fetchImpl,
+      now: () => t,
+    });
+    t = 10 ** 9; // far past the 1-second TTL
+    const out = await performFetch(owned(['gene:TP53']), {
+      cache,
+      limiter: limiter(),
+      fetchImpl: vi.fn(async () => {
+        throw new Error('network must not be used');
+      }),
+      now: () => t,
+    });
+    expect(out).toMatchObject({ ok: true, fromCache: true, stale: false, data: { v: 1 } });
+  });
+  it('refreshes an expired entry that is NOT pinned', async () => {
+    const cache = memCache();
+    let t = 1000;
+    let n = 0;
+    const fetchImpl = vi.fn(async () => reply(`{"v":${++n}}`));
+    await performFetch(owned(['gene:TP53']), {
+      cache,
+      limiter: limiter(),
+      fetchImpl,
+      now: () => t,
+    });
+    t = 10 ** 9;
+    expect(
+      (
+        await performFetch(owned(['gene:TP53']), {
+          cache,
+          limiter: limiter(),
+          fetchImpl,
+          now: () => t,
+        })
+      ).data,
+    ).toEqual({ v: 2 });
+  });
+  it('adds owners when falling back to a stale copy while offline', async () => {
+    const cache = memCache();
+    let t = 1000;
+    await performFetch(owned(['gene:TP53']), {
+      cache,
+      limiter: limiter(),
+      fetchImpl: async () => reply('{"a":1}'),
+      now: () => t,
+    });
+    t = 10 ** 9;
+    const out = await performFetch(owned(['gene:EGFR']), {
+      cache,
+      limiter: limiter(),
+      fetchImpl: async () => {
+        throw new TypeError('offline');
+      },
+      now: () => t,
+    });
+    expect(out).toMatchObject({ stale: true });
+    expect([...cache.metas.values()][0].owners).toEqual(['gene:TP53', 'gene:EGFR']);
   });
 });

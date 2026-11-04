@@ -3,10 +3,17 @@ import { ageLabel } from '../core/cache.js';
 import { cache, isElectron } from '../core/http.js';
 import { toast } from './cards.js';
 import { debounce, h, setChildren } from './dom.js';
-import { emit, store } from './state.js';
+import { emit, libraryStore, store } from './state.js';
+import { ownersOf } from '../core/library.js';
 
 const SHOW_LIMIT = 200;
-const KIND_NAMES = { gene: 'Gene', pathway: 'Pathway', analysis: 'Analysis', other: 'Other' };
+const KIND_NAMES = {
+  gene: 'Gene',
+  pathway: 'Pathway',
+  analysis: 'Analysis',
+  shared: 'Shared',
+  other: 'Other',
+};
 
 // Formats a byte count like "1.4 MB".
 export function formatBytes(bytes) {
@@ -236,6 +243,14 @@ export function createDataManager(container) {
 
   // Deletes everything this app stores, then reloads so no deleted data stays on screen.
   async function deleteEverything() {
+    // Unpin first (the main process remembers pins) so nothing stays frozen after everything else is gone.
+    if (isElectron()) {
+      for (const item of Object.values(libraryStore.lib.items)) {
+        if (item.pinned)
+          for (const owner of ownersOf(item)) await window.api.setCachePinned(owner, false);
+      }
+    }
+    libraryStore.clear();
     store.clearHistory();
     store.clearSessions();
     await cacheSource.remove('all');

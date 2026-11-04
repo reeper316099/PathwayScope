@@ -1,4 +1,7 @@
 // Shared app state: current analysis session, lazy hierarchy, found-gene cache, and a tiny event bus.
+import { safeLocalStorage } from '../core/cache.js';
+import { isElectron } from '../core/http.js';
+import { createLibraryStore, ownerId, upsertItem } from '../core/library.js';
 import { createStore } from '../core/sessionStore.js';
 import {
   fetchFoundDetails,
@@ -9,6 +12,7 @@ import { getHierarchy } from '../core/reactomeContent.js';
 
 const bus = new EventTarget();
 export const store = createStore();
+export const libraryStore = createLibraryStore(safeLocalStorage());
 export const state = { session: null, hierarchyPromise: null, foundCache: new Map() };
 
 // Emits a named event with a payload.
@@ -46,6 +50,11 @@ export function setSession(session, { persist = true } = {}) {
   state.session = session;
   if (session && persist) {
     store.saveSession(session);
+    touchLibrary({
+      type: 'analysis',
+      key: session.id,
+      label: `Analysis of ${session.inputIdentifiers.length} identifiers`,
+    });
     store.addHistory({
       type: 'analysis',
       key: session.id,
@@ -56,14 +65,35 @@ export function setSession(session, { persist = true } = {}) {
   emit('sessions-changed');
 }
 
+// Records (or refreshes) a gene, pathway or analysis in the Library so it shows up on Home. Desktop app only.
+export function touchLibrary({ type, key, label, aliases }) {
+  if (!isElectron()) return null;
+  try {
+    const item = upsertItem(libraryStore.lib, { type, key, label, aliases });
+    libraryStore.save();
+    emit('library-changed');
+    return item;
+  } catch {
+    return null; // a full or invalid library must never break a lookup
+  }
+}
+
+// Owner ids of the library item the user is working in right now (the current analysis, if any), for tagging cached data.
+export const analysisOwners = () => (state.session ? [ownerId('analysis', state.session.id)] : []);
+
 // Upper-cased identifiers the user typed (for matching participants by symbol).
 export const userIdentifierSet = () =>
   new Set((state.session?.inputIdentifiers ?? []).map((id) => id.toUpperCase()));
 
 // Loads (and caches) which of the user's identifiers matched a pathway, re-running the analysis once if the token expired.
-export async function loadFound(stId, options = {}) {
+export async function loadFound(stId, callerOptions = {}) {
   const session = state.session;
   if (!session) return null;
+  // Tag the cached response with this analysis so it is grouped with it on Home.
+  const options = {
+    ...callerOptions,
+    owners: [...(callerOptions.owners ?? []), ownerId('analysis', session.id)],
+  };
   const key = `${session.reactomeToken}|${stId}`;
   if (state.foundCache.has(key)) return state.foundCache.get(key);
   let details;

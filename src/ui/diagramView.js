@@ -5,7 +5,7 @@ import { getDiagramSvg } from '../core/reactomeContent.js';
 import { getAncestors } from '../core/hierarchy.js';
 import { emptyState, errorState, skeleton, warningNote } from './cards.js';
 import { externalLink, h, setChildren } from './dom.js';
-import { getHierarchyOnce, state } from './state.js';
+import { analysisOwners, getHierarchyOnce, state } from './state.js';
 
 const ZOOM_STEP = 1.25;
 
@@ -92,7 +92,7 @@ export function createDiagramView(root, { onOpenPathway }) {
   }
 
   // Shows the diagram for a pathway. `opts.hasDiagram` decides whether one exists; `opts.name` labels it for screen readers.
-  async function show(stId, { hasDiagram, name }) {
+  async function show(stId, { hasDiagram, name, owners = [] }) {
     controller?.abort();
     controller = new AbortController();
     const { signal } = controller;
@@ -139,12 +139,16 @@ export function createDiagramView(root, { onOpenPathway }) {
     let overlayFailed = false;
     try {
       try {
-        svgText = await getDiagramSvg(stId, { token, signal });
+        svgText = await getDiagramSvg(stId, {
+          token,
+          signal,
+          owners: token ? [...owners, ...analysisOwners()] : owners,
+        });
       } catch (error) {
         if (!token || signal.aborted) throw error;
         overlayFailed = true;
         overlay = false;
-        svgText = await getDiagramSvg(stId, { signal });
+        svgText = await getDiagramSvg(stId, { signal, owners });
       }
       if (signal.aborted) return;
       const clean = sanitizeSvg(svgText);
@@ -215,7 +219,7 @@ export function createDiagramView(root, { onOpenPathway }) {
       if (signal.aborted) return;
       setChildren(
         root,
-        errorState(error, () => show(stId, { hasDiagram, name })),
+        errorState(error, () => show(stId, { hasDiagram, name, owners })),
       );
     }
   }

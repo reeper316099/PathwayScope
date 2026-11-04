@@ -8,7 +8,7 @@ test('screenshots: Electron window (light and dark) for each mode', async () => 
   const list = fs.readFileSync(new URL('../../fixtures/gene-list-50.txt', import.meta.url), 'utf8');
   await win.evaluate(() => document.documentElement.setAttribute('data-theme', 'light'));
   await win.fill('#gene-input', 'TP53');
-  await win.click('.inline-form .btn');
+  await win.click('[data-view=explorer] .inline-form .btn');
   await expect(win.locator('.gene-card')).toContainText(/ClinVar: [\d,]+ records/, {
     timeout: 60_000,
   });
@@ -33,6 +33,10 @@ test('screenshots: Electron window (light and dark) for each mode', async () => 
   await win.click('#theme-toggle');
   await win.waitForTimeout(600);
   await win.screenshot({ path: 'docs/screenshots/electron-browser-dark.png' });
+  await win.click('#brand-link');
+  await expect(win.locator('.lib-card').first()).toBeVisible({ timeout: 20_000 });
+  await win.waitForTimeout(500);
+  await win.screenshot({ path: 'docs/screenshots/electron-home.png' });
   await win.click('#theme-toggle');
   await clickMenu(app, 'Manage Stored Data…');
   await expect(win.locator('#data-manager table.data')).toBeVisible();

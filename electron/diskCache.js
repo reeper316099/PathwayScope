@@ -15,6 +15,83 @@ export class DiskCache {
     this.dir = dir;
   }
 
+  // Reads one entry's small description file (label, kind, owners, ...), or null.
+  async readMeta(key) {
+    try {
+      return JSON.parse(await fs.readFile(path.join(this.dir, `${key}.meta`), 'utf8'));
+    } catch {
+      return null;
+    }
+  }
+
+  // Loads the set of pinned owner ids ("kept" library items) from disk.
+  async pins() {
+    if (!this.pinned) {
+      try {
+        this.pinned = new Set(
+          JSON.parse(await fs.readFile(path.join(this.dir, 'pins.state'), 'utf8')),
+        );
+      } catch {
+        this.pinned = new Set();
+      }
+    }
+    return this.pinned;
+  }
+
+  // Pins or unpins an owner: responses owned by a pinned owner are served from the cache however old they are (a frozen snapshot).
+  async setPinned(owner, pinned) {
+    const set = await this.pins();
+    if (pinned) set.add(owner);
+    else set.delete(owner);
+    await fs.mkdir(this.dir, { recursive: true });
+    await fs.writeFile(path.join(this.dir, 'pins.state'), JSON.stringify([...set]));
+  }
+
+  // True if any of the given owners is pinned.
+  async isPinned(owners = []) {
+    const set = await this.pins();
+    return owners.some((o) => set.has(o));
+  }
+
+  // Adds owners to an existing entry's description (used when a cached response is reused by another item).
+  async addOwners(key, owners) {
+    const meta = await this.readMeta(key);
+    if (!meta) return;
+    const merged = [...new Set([...(meta.owners ?? []), ...owners])].slice(0, 16);
+    if (merged.length === (meta.owners ?? []).length) return;
+    await fs.writeFile(
+      path.join(this.dir, `${key}.meta`),
+      JSON.stringify({ ...meta, owners: merged }),
+    );
+  }
+
+  // Removes an owner from every entry. Entries left with no owner are deleted (except "shared" ones that every lookup needs).
+  // Also unpins the owner. Returns { removed, freedBytes }.
+  async removeOwner(owner) {
+    let removed = 0;
+    let freedBytes = 0;
+    let names;
+    try {
+      names = await fs.readdir(this.dir);
+    } catch {
+      return { removed, freedBytes };
+    }
+    for (const name of names.filter((n) => /^[a-f0-9]{64}\.meta$/.test(n))) {
+      const key = name.slice(0, -5);
+      const meta = await this.readMeta(key);
+      if (!meta || !(meta.owners ?? []).includes(owner)) continue;
+      const left = meta.owners.filter((o) => o !== owner);
+      if (left.length === 0 && meta.kind !== 'shared') {
+        freedBytes += meta.bytes ?? 0;
+        if (await this.delete(key)) removed += 1;
+      } else {
+        await fs.writeFile(path.join(this.dir, name), JSON.stringify({ ...meta, owners: left }));
+      }
+    }
+    await this.setPinned(owner, false);
+    return { removed, freedBytes };
+  }
+
   // Reads an entry (even if stale; the caller decides by age) or returns null when missing/corrupt.
   async read(key) {
     try {
@@ -33,11 +110,17 @@ export class DiskCache {
     const body = JSON.stringify(entry);
     await fs.writeFile(tmp, body);
     await fs.rename(tmp, file);
+    const existing = await this.readMeta(key);
+    const owners = [...new Set([...(existing?.owners ?? []), ...(meta?.owners ?? [])])].slice(
+      0,
+      16,
+    );
     const description = {
       label: meta?.label ?? null,
       kind: meta?.kind ?? 'other',
       cachedAt: entry.cachedAt,
       bytes: Buffer.byteLength(body),
+      owners,
     };
     await fs.writeFile(path.join(this.dir, `${key}.meta`), JSON.stringify(description));
   }
@@ -61,6 +144,7 @@ export class DiskCache {
           kind: meta.kind ?? 'other',
           cachedAt: meta.cachedAt,
           bytes: meta.bytes ?? 0,
+          owners: meta.owners ?? [],
         });
       } catch {
         const stat = await fs.stat(path.join(this.dir, name)).catch(() => null);
@@ -71,6 +155,7 @@ export class DiskCache {
             kind: 'other',
             cachedAt: stat.mtimeMs,
             bytes: stat.size,
+            owners: [],
           });
       }
     }

@@ -1,6 +1,6 @@
 // Turns an API request into a short human-readable label (shown in "Manage stored data") and a kind for grouping.
 
-const KINDS = ['gene', 'pathway', 'analysis', 'other'];
+const KINDS = ['gene', 'pathway', 'analysis', 'shared', 'other'];
 export const isKind = (value) => KINDS.includes(value);
 
 // Removes control characters and shortens a label to a sane length.
@@ -34,13 +34,13 @@ export function describeRequest(method, url, body = '') {
     if ((m = p.match(/\/data\/participants\/(R-[A-Z]{3}-\d+)\//)))
       return make(`Pathway participants: ${m[1]}`, 'pathway');
     if (p.includes('/data/eventsHierarchy/'))
-      return make('Pathway hierarchy (all human pathways)', 'pathway');
+      return make('Pathway hierarchy (all human pathways)', 'shared');
     if ((m = p.match(/\/exporter\/diagram\/(R-[A-Z]{3}-\d+)\.svg$/)))
       return make(
         `Pathway diagram: ${m[1]}${q.has('token') ? ' (with analysis highlighting)' : ''}`,
         'pathway',
       );
-    if (p.endsWith('/data/database/info')) return make('Reactome release information', 'other');
+    if (p.endsWith('/data/database/info')) return make('Reactome release information', 'shared');
     if (p.includes('/AnalysisService/identifiers/')) {
       const count = body
         .split(/\r?\n/)

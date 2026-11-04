@@ -63,6 +63,21 @@ test('Gene Explorer: alias HER2 is resolved and flagged; clicking a pathway open
   });
 });
 
+test('Gene Explorer: a pathway can be reopened after closing its drawer', async ({ page }) => {
+  await page.goto('/#/explorer/TP53');
+  await expect(page.locator('.pathway-item').first()).toBeAttached();
+  await page.locator('.group summary').first().click();
+  const first = page.locator('.group').first().locator('.pathway-item').first();
+  await first.click();
+  await expect(page.locator('#drawer')).toBeVisible();
+  await expect(page.locator('#drawer h2')).not.toBeEmpty({ timeout: 30_000 });
+  await page.locator('#drawer-close').click();
+  await expect(page.locator('#drawer')).toBeHidden();
+  await first.click(); // the same pathway again
+  await expect(page.locator('#drawer')).toBeVisible();
+  await expect(page.locator('#drawer h2')).not.toBeEmpty({ timeout: 30_000 });
+});
+
 test('Gene Explorer: filter and sort controls change the list', async ({ page }) => {
   await page.goto('/#/explorer/TP53');
   await expect(page.locator('.pathway-item').first()).toBeAttached();

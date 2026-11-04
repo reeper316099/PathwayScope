@@ -110,23 +110,35 @@ async function fetchWithRetry(req, limiter, fetchImpl) {
 // Full pipeline for a validated request: fresh cache -> network -> (on network failure) stale cache.
 export async function performFetch(req, { cache, limiter, fetchImpl = fetch, now = Date.now }) {
   const key = cacheKey(req.method, req.url.href, req.body ?? '');
+  const owners = req.owners ?? [];
   const cached = req.cacheTtlSeconds > 0 ? await cache.read(key) : null;
-  if (cached && now() - cached.cachedAt < req.cacheTtlSeconds * 1000) {
-    return {
-      ok: true,
-      status: cached.status,
-      data: cached.data,
-      cachedAt: cached.cachedAt,
-      fromCache: true,
-      stale: false,
-    };
+  if (cached) {
+    // A response owned by a pinned library item is a frozen snapshot: it is served however old it is.
+    const meta = await cache.readMeta(key);
+    const pinned = await cache.isPinned(meta?.owners ?? []);
+    if (pinned || now() - cached.cachedAt < req.cacheTtlSeconds * 1000) {
+      if (owners.length) await cache.addOwners(key, owners);
+      return {
+        ok: true,
+        status: cached.status,
+        data: cached.data,
+        cachedAt: cached.cachedAt,
+        fromCache: true,
+        stale: false,
+      };
+    }
   }
   try {
     const { status, data } = await fetchWithRetry(req, limiter, fetchImpl);
     if (status >= 200 && status < 300) {
       const cachedAt = now();
-      if (req.cacheTtlSeconds > 0)
-        await cache.write(key, { cachedAt, status, data }, { label: req.label, kind: req.kind });
+      if (req.cacheTtlSeconds > 0) {
+        await cache.write(
+          key,
+          { cachedAt, status, data },
+          { label: req.label, kind: req.kind, owners },
+        );
+      }
       return { ok: true, status, data, cachedAt: null, fromCache: false, stale: false };
     }
     return { ok: false, status, data, error: `HTTP ${status}` };
@@ -134,6 +146,7 @@ export async function performFetch(req, { cache, limiter, fetchImpl = fetch, now
     // Offline or blocked: fall back to ANY cached copy (even expired) and say so honestly.
     const old = await cache.read(key);
     if (old && req.cacheTtlSeconds > 0) {
+      if (owners.length) await cache.addOwners(key, owners);
       return {
         ok: true,
         status: old.status,

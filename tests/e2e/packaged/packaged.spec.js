@@ -57,9 +57,13 @@ test('packaged app: launches, is hardened, runs a gene search and an enrichment 
     'Version 0.1.0 · Electron 45.2.2 · ' + process.platform,
   );
 
+  // the packaged app opens on Home; go to Gene Explorer for the lookup
+  await expect(win.locator('[data-view=home]')).toBeVisible();
+  await win.click('a[data-mode=explorer]');
+
   // gene search (GET via the main process)
   await win.fill('#gene-input', 'TP53');
-  await win.click('.inline-form .btn');
+  await win.click('[data-view=explorer] .inline-form .btn');
   await expect(win.locator('.gene-title')).toHaveText('TP53', { timeout: 60_000 });
   await expect(win.locator('.gene-card')).toContainText(/ClinVar: [\d,]+ records/, {
     timeout: 60_000,

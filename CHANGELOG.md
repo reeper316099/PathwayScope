@@ -2,6 +2,31 @@
 
 All notable changes to PathwayScope are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- **Home page (desktop app).** The app now opens on a library of everything you looked up. Each gene, pathway and analysis is one card with its size; shared data (like the 3.9 MB pathway hierarchy) is shown separately; a storage bar explains where the space goes. Reach it from the logo, the sidebar or the Go menu (Ctrl/Cmd+Shift+H).
+- **Folders**, nested up to 8 levels, with drag and drop; an item can be in several folders; deleting a folder never deletes its items; search across the whole library.
+- **Pin ("keep")**: a pinned item's stored data is served as a frozen snapshot (even when old or offline) and is skipped by "Free up space".
+- **Delete an item and only its data**: cached responses are tagged with their owner, so deleting a gene frees what only it needs and keeps what other items still use. "Free up space" deletes all unpinned items.
+- **Settings tab** in the sidebar with Appearance, Stored data (the former pop-up), Help links and a keyboard-shortcut reference. Pop-up windows now also close when you click outside them.
+
+### Fixed
+
+- Clicking the same pathway again after closing its detail drawer did nothing.
+- Clicking a pathway in Gene Explorer collapsed every category you had opened.
+- The browser's "can't reach this source" message now mentions possible rate limiting.
+
+### Changed
+
+- The page can now call nine functions (two new, narrow ones: remove an owner's cached data, pin or unpin an owner), each validated again in the main process.
+- The weekly live-test workflow was removed; live tests can still be run by hand. CI runs only tests that need no live data.
+
+### Tests
+
+- 282 unit tests (about 98.5% line coverage of the data layer); 46 web and 20 desktop end-to-end tests, including tests that check the files on disk after every Home action.
+
 ## [0.1.0] - 2026-11-04
 
 First release. PathwayScope is an interactive pathway explorer on top of the [Reactome](https://reactome.org) knowledgebase, shipped as a desktop app (Windows, macOS, Linux), a website (GitHub Pages) and plain source you run with `npm`.
@@ -25,7 +50,7 @@ First release. PathwayScope is an interactive pathway explorer on top of the [Re
 ### Security
 
 - Electron: context isolation, sandbox, no Node in the page, strict Content-Security-Policy, no `eval`, blocked navigation and new windows, denied permissions.
-- All desktop network traffic goes through the main process: host allowlist, https only, GET/POST only, size caps, timeouts, per-host rate limiting, redirect re-checking. The page can call exactly seven functions.
+- All desktop network traffic goes through the main process: host allowlist, https only, GET/POST only, size caps, timeouts, per-host rate limiting, redirect re-checking. The page can call exactly seven functions (nine from the next release).
 
 ### Under the hood
 

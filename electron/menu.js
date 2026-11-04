@@ -32,6 +32,7 @@ export function buildMenu({
     {
       label: 'Go',
       submenu: [
+        item('Home', 'CmdOrCtrl+Shift+H', 'mode:home'),
         item('Focus Search', 'CmdOrCtrl+K', 'focusSearch'),
         item('Gene Explorer', 'CmdOrCtrl+1', 'mode:explorer'),
         item('Enrichment Analysis', 'CmdOrCtrl+2', 'mode:enrichment'),

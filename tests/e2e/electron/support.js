@@ -10,7 +10,8 @@ const root = path.resolve(import.meta.dirname, '..', '..', '..');
 export const newUserData = () => fs.mkdtempSync(path.join(os.tmpdir(), 'ps-e2e-'));
 
 // Launches the app (built with `npm run build:electron`) without stealing focus; returns { app, win, errors }.
-export async function launch(userData = newUserData()) {
+// The desktop app opens on Home; tests that work in Gene Explorer start there unless they pass { home: true }.
+export async function launch(userData = newUserData(), { home = false } = {}) {
   const app = await electron.launch({
     args: ['.', `--user-data-dir=${userData}`],
     cwd: root,
@@ -26,6 +27,12 @@ export async function launch(userData = newUserData()) {
     null,
     { timeout: 60_000 },
   );
+  if (!home) {
+    await win.evaluate(() => {
+      location.hash = '#/explorer';
+    });
+    await win.locator('[data-view=explorer]').waitFor({ state: 'visible' });
+  }
   return { app, win, errors, userData };
 }
 

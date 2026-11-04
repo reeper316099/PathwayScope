@@ -14,7 +14,13 @@
   <body>
     <a class="skip-link" href="#workspace">Skip to content</a>
     <header class="topbar">
-      <div class="brand"><span class="brand-mark" aria-hidden="true">◈</span> PathwayScope</div>
+      <a
+        class="brand"
+        id="brand-link"
+        href="#/explorer"
+        aria-label="PathwayScope: go to the start page"
+        ><span class="brand-mark" aria-hidden="true">◈</span> PathwayScope</a
+      >
       <form id="global-search" class="search" role="search" autocomplete="off">
         <label class="visually-hidden" for="search-input">Search a gene or pathway</label>
         <input
@@ -40,6 +46,9 @@
     <div class="layout">
       <nav class="rail" aria-label="Modes">
         <ul class="modes">
+          <li data-desktop-only hidden>
+            <a href="#/home" data-mode="home"><span aria-hidden="true">⌂</span> Home</a>
+          </li>
           <li>
             <a href="#/explorer" data-mode="explorer"
               ><span aria-hidden="true">①</span> Gene Explorer</a
@@ -70,6 +79,7 @@
       </nav>
 
       <main id="workspace" class="workspace" tabindex="-1">
+        <section class="view" data-view="home" hidden></section>
         <section class="view" data-view="explorer" hidden></section>
         <section class="view" data-view="enrichment" hidden></section>
         <section class="view" data-view="browser" hidden></section>

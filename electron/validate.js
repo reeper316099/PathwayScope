@@ -9,6 +9,9 @@ export class RequestError extends Error {
   }
 }
 
+// Owner ids look like gene:TP53, pathway:R-HSA-69541 or analysis:<session id>.
+export const OWNER_PATTERN = /^(gene|pathway|analysis):[A-Za-z0-9._:-]{1,64}$/;
+
 const ALLOWED_HEADERS = new Set(['accept', 'content-type']);
 const ALLOWED_CONTENT_TYPES = new Set(['text/plain', 'application/json']);
 
@@ -91,7 +94,15 @@ export function validateFetchRequest(rawUrl, rawOptions = {}) {
           .join('')
           .slice(0, 160)
       : null;
-  const kind = ['gene', 'pathway', 'analysis', 'other'].includes(options.kind)
+  // Which library items (genes, pathways, analyses) this response belongs to; used to group stored data on the Home page.
+  const owners = [
+    ...new Set(
+      Array.isArray(options.owners)
+        ? options.owners.filter((o) => typeof o === 'string' && OWNER_PATTERN.test(o))
+        : [],
+    ),
+  ].slice(0, 8);
+  const kind = ['gene', 'pathway', 'analysis', 'shared', 'other'].includes(options.kind)
     ? options.kind
     : 'other';
 
@@ -100,6 +111,7 @@ export function validateFetchRequest(rawUrl, rawOptions = {}) {
     method,
     label,
     kind,
+    owners,
     headers,
     body,
     cacheTtlSeconds: Math.min(Math.floor(ttl), LIMITS.maxCacheTtlSeconds),
@@ -136,4 +148,10 @@ export function validateSaveRequest(req) {
 export function validateCacheKey(key) {
   if (key === 'all' || (typeof key === 'string' && /^[a-f0-9]{64}$/.test(key))) return key;
   throw new RequestError('bad-key', 'Invalid cache entry key.');
+}
+
+// Accepts one owner id (see OWNER_PATTERN) or throws.
+export function validateOwner(owner) {
+  if (typeof owner === 'string' && OWNER_PATTERN.test(owner)) return owner;
+  throw new RequestError('bad-owner', 'Invalid owner id.');
 }

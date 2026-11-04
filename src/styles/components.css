@@ -867,3 +867,178 @@ kbd {
   margin-top: 0;
   padding-top: 0;
 }
+
+/* Brand is a link now (to Home in the desktop app) */
+a.brand {
+  color: inherit;
+  text-decoration: none;
+}
+a.brand:hover {
+  opacity: 0.9;
+}
+
+/* Home: library cards, folders, storage bar */
+.lib-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 12px;
+  margin-top: 10px;
+}
+.lib-card,
+.folder-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: var(--surface);
+  transition:
+    box-shadow var(--t),
+    transform var(--t);
+}
+.lib-card:hover,
+.folder-card:hover {
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
+}
+.lib-card[draggable='true'] {
+  cursor: grab;
+}
+.lib-card.pinned {
+  border-color: var(--accent);
+  border-width: 2px;
+}
+.folder-card {
+  background: var(--surface-2);
+}
+.folder-card.drop {
+  outline: 3px dashed var(--secondary);
+  outline-offset: 2px;
+}
+.lib-card h3,
+.folder-card h3 {
+  margin: 6px 0 4px;
+  font-size: 1.05rem;
+  overflow-wrap: anywhere;
+}
+.lib-card-head {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+}
+.type-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+}
+.type-gene {
+  background: var(--secondary);
+  color: #04201c;
+}
+.type-pathway {
+  background: var(--moderate);
+  color: #fff;
+}
+.type-analysis {
+  background: var(--strong);
+  color: #fff;
+}
+.type-folder {
+  background: var(--accent);
+  color: #1f1300;
+}
+.pin-badge {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.crumbs-bar {
+  margin: 4px 0 8px;
+}
+.storage-bar {
+  display: flex;
+  height: 16px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  margin: 8px 0;
+}
+.seg-pinned {
+  background: var(--accent);
+}
+.seg-items {
+  background: var(--primary);
+}
+.seg-shared {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--secondary),
+    var(--secondary) 4px,
+    var(--surface) 4px,
+    var(--surface) 7px
+  );
+}
+.seg-unsorted {
+  background: repeating-linear-gradient(
+    90deg,
+    var(--none),
+    var(--none) 3px,
+    var(--surface) 3px,
+    var(--surface) 6px
+  );
+}
+.storage-legend {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  padding: 0;
+  margin: 6px 0;
+}
+.swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  vertical-align: -2px;
+}
+.other-data summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+dialog.modal {
+  width: min(560px, 94vw);
+}
+.modal-body {
+  margin: 8px 0;
+}
+dialog.modal input[type='text'] {
+  width: 100%;
+  margin: 6px 0;
+}
+.filing-list {
+  max-height: 260px;
+  overflow-y: auto;
+  margin: 8px 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 6px 10px;
+}
+.filing-row {
+  display: block;
+  padding: 3px 0;
+  cursor: pointer;
+}
+.filing-new {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin: 8px 0;
+}
+.filing-new input {
+  flex: 1;
+  min-width: 160px;
+}

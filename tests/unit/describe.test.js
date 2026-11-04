@@ -45,7 +45,7 @@ describe('describeRequest', () => {
       `${R}/ContentService/data/eventsHierarchy/9606`,
       '',
       'Pathway hierarchy (all human pathways)',
-      'pathway',
+      'shared',
     ],
     [
       'GET',
@@ -61,7 +61,7 @@ describe('describeRequest', () => {
       'Pathway diagram: R-HSA-69620 (with analysis highlighting)',
       'pathway',
     ],
-    ['GET', `${R}/ContentService/data/database/info`, '', 'Reactome release information', 'other'],
+    ['GET', `${R}/ContentService/data/database/info`, '', 'Reactome release information', 'shared'],
     [
       'GET',
       `${R}/AnalysisService/token/abc/found/entities/R-HSA-69620`,

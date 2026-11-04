@@ -4,6 +4,7 @@ import { h, setChildren } from './dom.js';
 import { toggleTheme } from './theme.js';
 
 const SHORTCUTS = [
+  ['Ctrl/Cmd + Shift + H', 'Home (desktop app)'],
   ['Ctrl/Cmd + K', 'Focus the search box'],
   ['Ctrl/Cmd + 1 / 2 / 3 / 4', 'Gene Explorer / Enrichment / Pathway Browser / Settings'],
   ['Ctrl/Cmd + D', 'Toggle dark mode'],

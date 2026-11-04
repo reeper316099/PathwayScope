@@ -2,7 +2,9 @@
 import { cache, isElectron, onRequestMeta } from './core/http.js';
 import { getDatabaseInfo } from './core/reactomeContent.js';
 import { createEnrichmentView } from './ui/enrichmentView.js';
+import { closeOnOutsideClick } from './ui/dialogs.js';
 import { createGeneExplorer } from './ui/geneExplorer.js';
+import { createHomeView } from './ui/homeView.js';
 import { createBrowserView } from './ui/browserView.js';
 import { cacheLabel, setBanner, toast } from './ui/cards.js';
 import { mountHistory } from './ui/history.js';
@@ -10,9 +12,14 @@ import { createPathwayDetail } from './ui/pathwayDetail.js';
 import { createSettingsView } from './ui/settingsView.js';
 import { mountGlobalSearch } from './ui/search.js';
 import { getSelected, onSelection, select } from './ui/selection.js';
+import { analysisOwners } from './ui/state.js';
 import { initTheme, toggleTheme } from './ui/theme.js';
 
-const MODES = ['explorer', 'enrichment', 'browser', 'settings'];
+// The desktop app has a Home page (your library) and opens on it; the website opens on Gene Explorer.
+const MODES = isElectron()
+  ? ['home', 'explorer', 'enrichment', 'browser', 'settings']
+  : ['explorer', 'enrichment', 'browser', 'settings'];
+const DEFAULT_MODE = MODES[0];
 const $ = (id) => document.getElementById(id);
 const views = {};
 let mode = 'explorer';
@@ -22,7 +29,7 @@ let aboutInfo = '';
 function parseHash() {
   const [m, ...rest] = location.hash.replace(/^#\/?/, '').split('/');
   return {
-    mode: MODES.includes(m) ? m : 'explorer',
+    mode: MODES.includes(m) ? m : DEFAULT_MODE,
     param: rest.length ? decodeURIComponent(rest.join('/')) : '',
   };
 }
@@ -35,28 +42,31 @@ const go = (m, param = '') => {
 // Shared actions every view can call.
 const ctx = {
   openPathway: (stId) => {
+    const alreadySelected = getSelected('pathway') === stId;
     select({ type: 'pathway', id: stId });
+    // Selecting the same pathway again fires no event, so reopen a closed drawer by hand.
+    if (alreadySelected && mode !== 'browser' && $('drawer').hidden) openDrawer(stId);
     if (mode === 'browser' && parseHash().param !== stId)
       history.replaceState(null, '', `#/browser/${stId}`);
   },
   navigateGene: (symbol) => go('explorer', symbol),
   currentPathway: () => getSelected('pathway'),
   openDialog: (id) => $(id).showModal(),
+  go: (m, param) => go(m, param),
+  // Opens a pathway in the Pathway Browser / a saved analysis in Enrichment (used by the Home page).
+  openPathwayItem: (stId) => go('browser', stId),
+  openAnalysis: (id) => {
+    go('enrichment');
+    ensureView('enrichment').openSessionById(id);
+  },
+  // Owner ids of what the user is working in (the gene on screen, or the current analysis), used to tag cached data.
+  contextOwners: () =>
+    mode === 'explorer'
+      ? (views.explorer?.owners?.() ?? [])
+      : mode === 'enrichment'
+        ? analysisOwners()
+        : [],
 };
-
-// Lets a click on the dark area OUTSIDE a pop-up dialog close it (Esc already does).
-function closeOnOutsideClick(dialog) {
-  dialog.addEventListener('click', (event) => {
-    if (event.target !== dialog) return;
-    const box = dialog.getBoundingClientRect();
-    const inside =
-      event.clientX >= box.left &&
-      event.clientX <= box.right &&
-      event.clientY >= box.top &&
-      event.clientY <= box.bottom;
-    if (!inside) dialog.close();
-  });
-}
 
 // Creates a view the first time its mode is shown.
 function ensureView(name) {
@@ -67,6 +77,7 @@ function ensureView(name) {
     enrichment: createEnrichmentView,
     browser: createBrowserView,
     settings: createSettingsView,
+    home: createHomeView,
   }[name](root, ctx);
   return views[name];
 }
@@ -95,7 +106,10 @@ const closeDrawer = () => {
 };
 function openDrawer(stId) {
   $('drawer').hidden = false;
-  drawerDetail ??= createPathwayDetail($('drawer-body'), { onOpenPathway: ctx.openPathway });
+  drawerDetail ??= createPathwayDetail($('drawer-body'), {
+    onOpenPathway: ctx.openPathway,
+    getOwners: ctx.contextOwners,
+  });
   drawerDetail.show(stId);
 }
 onSelection((sel) => {
@@ -203,6 +217,13 @@ async function boot() {
   $('theme-toggle').addEventListener('click', toggleTheme);
   $('about-btn').addEventListener('click', () => handleAction({ action: 'about' }));
   $('data-btn').addEventListener('click', () => go('settings'));
+  // Desktop app: show the Home tab, and make the logo lead to Home (on the website it leads to Gene Explorer).
+  if (isElectron()) {
+    document.querySelectorAll('[data-desktop-only]').forEach((el) => {
+      el.hidden = false;
+    });
+    $('brand-link').setAttribute('href', '#/home');
+  }
   for (const id of ['about-dialog', 'sources-dialog']) closeOnOutsideClick($(id));
   $('drawer-close').addEventListener('click', closeDrawer);
   document.addEventListener(

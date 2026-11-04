@@ -9,8 +9,8 @@ function expect(condition, message) {
 // Copies only the option fields the main process understands.
 function pickFetchOptions(options = {}) {
   expect(options && typeof options === 'object', 'options must be an object');
-  const { method, headers, body, cacheTtlSeconds, timeoutMs, label, kind } = options;
-  return { method, headers, body, cacheTtlSeconds, timeoutMs, label, kind };
+  const { method, headers, body, cacheTtlSeconds, timeoutMs, label, kind, owners } = options;
+  return { method, headers, body, cacheTtlSeconds, timeoutMs, label, kind, owners };
 }
 
 contextBridge.exposeInMainWorld('api', {
@@ -38,6 +38,16 @@ contextBridge.exposeInMainWorld('api', {
   deleteCacheEntry: (key) => {
     expect(typeof key === 'string', 'key must be a string');
     return ipcRenderer.invoke('api:deleteCacheEntry', key);
+  },
+  // Deletes the cached data that belongs only to one library item (gene, pathway or analysis); shared data stays.
+  removeCacheOwner: (owner) => {
+    expect(typeof owner === 'string', 'owner must be a string');
+    return ipcRenderer.invoke('api:removeCacheOwner', owner);
+  },
+  // Pins or unpins a library item's cached data (pinned data is served as a frozen snapshot).
+  setCachePinned: (owner, pinned) => {
+    expect(typeof owner === 'string', 'owner must be a string');
+    return ipcRenderer.invoke('api:setCachePinned', owner, pinned === true);
   },
   // One-way subscription to native menu actions (a 5th function beyond the original four; see report).
   onMenuAction: (callback) => {

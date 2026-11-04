@@ -6,7 +6,7 @@ import { friendlyError, warningNote } from './cards.js';
 import { externalLink, h, setChildren } from './dom.js';
 
 // Builds the gene card; slow parts (protein name, ClinVar, interactors) fill in as they arrive and fail independently.
-export function createGeneCard(gene, { signal, onOpenGene }) {
+export function createGeneCard(gene, { signal, owners = [], onOpenGene }) {
   const nameEl = h('span', { class: 'muted' }, 'protein name: loading…');
   const clinvarEl = h('span', { class: 'badge neutral' }, 'ClinVar: loading…');
   const interactorsEl = h('div', { class: 'interactors muted' }, 'Interactors: loading…');
@@ -37,7 +37,7 @@ export function createGeneCard(gene, { signal, onOpenGene }) {
     interactorsEl,
   );
 
-  getProteinInfo(gene.uniprotAccession, { signal }).then(
+  getProteinInfo(gene.uniprotAccession, { signal, owners }).then(
     (info) =>
       setChildren(
         nameEl,
@@ -45,7 +45,7 @@ export function createGeneCard(gene, { signal, onOpenGene }) {
       ),
     () => setChildren(nameEl, 'Protein name: not available (UniProt could not be reached)'),
   );
-  getClinvarPathogenicCount(gene.symbol, { signal }).then(
+  getClinvarPathogenicCount(gene.symbol, { signal, owners }).then(
     (count) => {
       clinvarEl.className = 'badge neutral';
       setChildren(
@@ -59,7 +59,7 @@ export function createGeneCard(gene, { signal, onOpenGene }) {
     },
     () => setChildren(clinvarEl, 'ClinVar: not available'),
   );
-  getInteractors(gene.uniprotAccession, { pageSize: 10, signal }).then(
+  getInteractors(gene.uniprotAccession, { pageSize: 10, signal, owners }).then(
     (result) => {
       if (result.total === 0)
         return setChildren(interactorsEl, 'Interactors (IntAct, via Reactome): none listed.');

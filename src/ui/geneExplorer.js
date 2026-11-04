@@ -9,8 +9,9 @@ import { HttpError } from '../core/http.js';
 import { emptyState, errorState, skeleton, warningNote } from './cards.js';
 import { debounce, h, setChildren } from './dom.js';
 import { createGeneCard } from './geneCard.js';
+import { ownerId } from '../core/library.js';
 import { onSelection, select } from './selection.js';
-import { getHierarchyOnce, emit, store } from './state.js';
+import { getHierarchyOnce, emit, store, touchLibrary } from './state.js';
 
 const EXAMPLES = ['TP53', 'BRCA1', 'EGFR', 'MTOR'];
 
@@ -67,6 +68,7 @@ export function createGeneExplorer(root, ctx) {
   );
 
   let controller = null;
+  let currentOwners = []; // owner ids of the gene being shown (pathway lookups opened from it are tagged with them too)
   let current = null; // { gene, pathways, hierarchy, filter, sort, selected }
 
   // Builds the list of pathway groups for the current filter/sort settings.
@@ -118,7 +120,15 @@ export function createGeneExplorer(root, ctx) {
       groups.map(([name, list]) =>
         h(
           'details',
-          { class: 'group', open: groups.length <= 3 || undefined },
+          {
+            class: 'group',
+            // categories the user opened stay open when the list redraws (for example after clicking a pathway)
+            open: groups.length <= 3 || current.openGroups.has(name) || undefined,
+            ontoggle: (e) => {
+              if (e.target.open) current.openGroups.add(name);
+              else current.openGroups.delete(name);
+            },
+          },
           h('summary', {}, `${name} (${list.length})`),
           h(
             'ul',
@@ -211,7 +221,8 @@ export function createGeneExplorer(root, ctx) {
       );
     setChildren(result, skeleton(5));
     try {
-      const gene = await searchGene(symbol, { signal });
+      let owners = [ownerId('gene', symbol)]; // tags every cached response of this lookup so Home can group them
+      const gene = await searchGene(symbol, { signal, owners });
       if (signal.aborted) return;
       if (!gene)
         return setChildren(
@@ -220,14 +231,30 @@ export function createGeneExplorer(root, ctx) {
             `No human gene named "${symbol}" was found in Reactome. Reactome only knows genes whose proteins appear in a pathway.`,
           ),
         );
+      owners = [...new Set([ownerId('gene', gene.symbol), ...owners])];
+      touchLibrary({
+        type: 'gene',
+        key: gene.symbol,
+        label: gene.symbol,
+        aliases: gene.symbol.toUpperCase() === symbol.toUpperCase() ? [] : [symbol],
+      });
+      currentOwners = [ownerId('gene', gene.symbol)];
       store.addHistory({ type: 'gene', key: gene.symbol, label: `Gene ${gene.symbol}` });
       emit('history-changed');
       const [pathways, hierarchy] = await Promise.all([
-        getLowestPathwaysForGene(gene.uniprotAccession, { signal }),
+        getLowestPathwaysForGene(gene.uniprotAccession, { signal, owners }),
         getHierarchyOnce().catch(() => null),
       ]);
       if (signal.aborted) return;
-      current = { gene, pathways, hierarchy, filter: '', sort: 'name', selected: null };
+      current = {
+        gene,
+        pathways,
+        hierarchy,
+        filter: '',
+        sort: 'name',
+        selected: null,
+        openGroups: new Set(),
+      };
       const filterInput = h('input', {
         type: 'search',
         placeholder: 'Filter pathways…',
@@ -251,7 +278,7 @@ export function createGeneExplorer(root, ctx) {
       );
       setChildren(
         result,
-        createGeneCard(gene, { signal, onOpenGene: ctx.navigateGene }),
+        createGeneCard(gene, { signal, owners, onOpenGene: ctx.navigateGene }),
         h(
           'section',
           { class: 'card', 'aria-label': 'Pathways' },
@@ -283,6 +310,7 @@ export function createGeneExplorer(root, ctx) {
   });
 
   return {
+    owners: () => currentOwners,
     show: (symbol) => (symbol && symbol !== current?.gene.symbol ? load(symbol) : undefined),
     focus: () => input.focus(),
     select,

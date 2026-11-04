@@ -8,7 +8,7 @@ test('Manage stored data: list, delete one cached lookup (really removed from di
   const userData = newUserData();
   let run = await launch(userData);
   await run.win.fill('#gene-input', 'TP53');
-  await run.win.click('.inline-form .btn');
+  await run.win.click('[data-view=explorer] .inline-form .btn');
   await expect(run.win.locator('.gene-card')).toContainText(/ClinVar: [\d,]+ records/, {
     timeout: 60_000,
   });
@@ -78,7 +78,7 @@ test('Manage stored data: list, delete one cached lookup (really removed from di
   // delete everything needs a confirmation, then reloads with nothing left
   run = await launch(userData);
   await run.win.fill('#gene-input', 'BRCA1');
-  await run.win.click('.inline-form .btn');
+  await run.win.click('[data-view=explorer] .inline-form .btn');
   await expect(run.win.locator('.gene-title')).toHaveText('BRCA1', { timeout: 60_000 });
   await runEnrichment(run.win, 'TP53\nATM');
   await run.win.waitForTimeout(1200);
