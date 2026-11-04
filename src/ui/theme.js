@@ -16,6 +16,7 @@ function apply(theme) {
   document.documentElement.dataset.theme = theme;
   const btn = document.getElementById('theme-toggle');
   if (btn) btn.setAttribute('aria-pressed', String(theme === 'dark'));
+  document.dispatchEvent(new CustomEvent('themechange'));
 }
 
 // Sets the initial theme (saved choice, else system preference).

@@ -42,7 +42,8 @@ export default defineConfig(({ mode }) => ({
   base: './',
   publicDir: false,
   plugins: [cspPlugin(mode)],
-  build: { outDir: '../dist', emptyOutDir: true, target: 'es2022' },
+  // The single bundle includes Cytoscape, Chart.js and DOMPurify (installed via npm, never a CDN), so it is larger than 500 kB.
+  build: { outDir: '../dist', emptyOutDir: true, target: 'es2022', chunkSizeWarningLimit: 1200 },
   server: { port: 5173, strictPort: true },
   test: {
     root: '.',

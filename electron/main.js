@@ -1,5 +1,6 @@
 // Electron main process: secure window, menu, IPC, disk cache. The renderer gets no network or Node access.
 import { app, BrowserWindow, dialog, ipcMain, session, shell } from 'electron';
+import fsSync from 'node:fs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -16,6 +17,7 @@ const DEV_URL = process.env.ELECTRON_DEV_URL || null; // set by scripts/dev-elec
 // Background mode: show the window without stealing focus or bouncing the Dock (used by tests and `dev:electron:bg`).
 const BACKGROUND = process.env.PATHWAYSCOPE_BACKGROUND === '1';
 const DIST_DIR = path.join(here, '..', 'dist');
+const ICON_PATH = path.join(here, '..', 'build', 'icon.png');
 const APP_URL = DEV_URL ?? pathToFileURL(path.join(DIST_DIR, 'index.html')).href;
 
 let mainWindow = null;
@@ -80,6 +82,7 @@ function createWindow() {
     minWidth: 1000,
     minHeight: 700,
     title: 'PathwayScope',
+    icon: fsSync.existsSync(ICON_PATH) ? ICON_PATH : undefined, // packaged apps get their icon from electron-builder instead
     backgroundColor: '#1E1B4B',
     show: false,
     webPreferences: {

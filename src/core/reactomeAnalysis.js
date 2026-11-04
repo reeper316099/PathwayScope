@@ -136,20 +136,28 @@ export async function fetchUnmapped(token, options = {}) {
   return ids;
 }
 
-// Loads the user's identifiers that matched one pathway (as the user typed them), e.g. ["Her2", "TP53"].
-export async function fetchFoundIdentifiers(token, stId, options = {}) {
+// Loads the user's identifiers that matched one pathway: [{ id (as typed), uniprot: [mapped accessions] }].
+export async function fetchFoundDetails(token, stId, options = {}) {
   if (!isWellFormedToken(token)) throw new TokenExpiredError();
   try {
     const data = await getJson(
       `${ANALYSIS_BASE}/token/${encodeURIComponent(token)}/found/entities/${encodeURIComponent(stId)}`,
       { ttl: TTL.analysisSeconds, ...options },
     );
-    return (data?.identifiers ?? []).map((i) => i.id);
+    return (data?.identifiers ?? []).map((i) => ({
+      id: i.id,
+      uniprot: (i.mapsTo ?? []).filter((m) => m.resource === 'UNIPROT').flatMap((m) => m.ids ?? []),
+    }));
   } catch (error) {
     if (error instanceof HttpError && error.kind === 'http' && error.status === 404)
       throw new TokenExpiredError();
     throw error;
   }
+}
+
+// Loads just the identifiers (as the user typed them) that matched one pathway, e.g. ["Her2", "TP53"].
+export async function fetchFoundIdentifiers(token, stId, options = {}) {
+  return (await fetchFoundDetails(token, stId, options)).map((i) => i.id);
 }
 
 // Derives the background size Reactome used: pathway total / Reactome's own ratio (an inference, labeled as derived in the UI).
@@ -160,10 +168,16 @@ export function deriveBackgroundSize(sample) {
 }
 
 // Runs a complete analysis and returns an AnalysisSession (rows stored in full so it can be viewed offline).
-export async function runAnalysis(identifiers, parameters = DEFAULT_PARAMETERS, options = {}) {
+export async function runAnalysis(
+  identifiers,
+  parameters = DEFAULT_PARAMETERS,
+  { onProgress, ...options } = {},
+) {
   const params = { ...DEFAULT_PARAMETERS, ...parameters };
+  onProgress?.(`Submitting ${identifiers.length} identifiers to Reactome…`);
   const submitted = await submitAnalysis(identifiers, params, options);
   const token = decodeURIComponent(submitted.summary.token);
+  onProgress?.('Downloading pathway results…');
   const [results, unmapped, info] = await Promise.all([
     fetchAllResults(token, params, options),
     fetchUnmapped(token, options),

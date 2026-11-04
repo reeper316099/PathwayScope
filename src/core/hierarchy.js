@@ -18,6 +18,7 @@ export function buildHierarchy(rawTopLevel) {
         summary: null,
         isLowestLevel: true,
         hasDiagram: raw.diagram === true,
+        size: Number.isFinite(raw.totalEntity) ? raw.totalEntity : null,
         parentStIds: [],
         childStIds: [],
         type: raw.type,
@@ -28,7 +29,8 @@ export function buildHierarchy(rawTopLevel) {
   // Walks the nested JSON, linking each pathway to its pathway children (iterative to survive very deep trees).
   const stack = rawTopLevel
     .filter((n) => PATHWAY_TYPES.has(n.type))
-    .map((raw) => ({ raw, parent: null }));
+    .map((raw) => ({ raw, parent: null }))
+    .reverse(); // the stack pops from the end, so reverse to keep Reactome's top-level order
   const expanded = new Set();
   while (stack.length) {
     const { raw, parent } = stack.pop();

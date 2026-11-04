@@ -4,11 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>PathwayScope</title>
+    <!-- Cytoscape injects its own <style> tag (blocked by our CSP) unless an element with this id exists; its rule is in components.css. -->
+    <meta id="__________cytoscape_stylesheet" name="cytoscape-style-placeholder" content="" />
     <link rel="stylesheet" href="./styles/tokens.css" />
     <link rel="stylesheet" href="./styles/base.css" />
     <link rel="stylesheet" href="./styles/components.css" />
   </head>
   <body>
+    <a class="skip-link" href="#workspace">Skip to content</a>
     <header class="topbar">
       <div class="brand"><span class="brand-mark" aria-hidden="true">◈</span> PathwayScope</div>
       <form id="global-search" class="search" role="search" autocomplete="off">
@@ -54,38 +57,25 @@
         </ul>
         <section class="rail-section" aria-labelledby="history-title">
           <h2 id="history-title">History</h2>
-          <p class="muted">No searches or analyses yet.</p>
+          <div id="history-list"></div>
         </section>
         <section class="rail-section" aria-labelledby="sessions-title">
           <h2 id="sessions-title">Saved sessions</h2>
-          <p class="muted">No saved sessions yet.</p>
+          <div id="sessions-list"></div>
         </section>
       </nav>
 
       <main id="workspace" class="workspace" tabindex="-1">
-        <section class="view card" data-view="explorer" hidden>
-          <h1>Gene Explorer</h1>
-          <p>
-            Enter a human gene symbol (for example TP53) to see every Reactome pathway it takes part
-            in and where those pathways sit in the hierarchy.
-          </p>
-        </section>
-        <section class="view card" data-view="enrichment" hidden>
-          <h1>Enrichment Analysis</h1>
-          <p>
-            Paste a gene list to test which pathways contain more of your genes than chance would
-            predict. Results are hypothesis-generating, not proof.
-          </p>
-        </section>
-        <section class="view card" data-view="browser" hidden>
-          <h1>Pathway Browser</h1>
-          <p>
-            Browse the full human Reactome pathway hierarchy and open any pathway for its summary,
-            participants, references and diagram.
-          </p>
-        </section>
+        <section class="view" data-view="explorer" hidden></section>
+        <section class="view" data-view="enrichment" hidden></section>
+        <section class="view" data-view="browser" hidden></section>
       </main>
     </div>
+
+    <aside id="drawer" class="drawer" hidden aria-label="Pathway detail">
+      <button id="drawer-close" class="btn secondary drawer-close" type="button">Close ✕</button>
+      <div id="drawer-body"></div>
+    </aside>
 
     <footer class="statusbar">
       <span id="data-status">Reactome release: loading…</span>
@@ -97,18 +87,35 @@
     <dialog id="about-dialog" aria-labelledby="about-title">
       <h2 id="about-title">About PathwayScope</h2>
       <p id="about-version" class="muted"></p>
+      <p id="about-data" class="muted"></p>
       <p>
         PathwayScope is an interactive explorer for the
         <a href="https://reactome.org" data-external>Reactome</a> pathway knowledgebase. Educational
         and research-exploration use only. It is not medical advice.
       </p>
+      <h3>What over-representation analysis does and does not tell you</h3>
       <ul>
-        <li>Pathway enrichment is hypothesis-generating, not proof.</li>
         <li>
-          Results depend on the background (the set of entities Reactome compares against) and on
-          how identifiers map.
+          It asks whether your genes land in a pathway more often than chance would predict, given a
+          background set. It is hypothesis-generating, not proof.
         </li>
-        <li>Human pathways only.</li>
+        <li>
+          The background matters: a different background gives different results. Very small and
+          very large pathways behave differently (small ones are easy to hit by chance; large ones
+          are broad).
+        </li>
+        <li>
+          FDR (false discovery rate) is the expected share of false hits among pathways called
+          significant after testing many pathways at once.
+        </li>
+        <li>
+          Identifier mapping is imperfect. Unmapped identifiers are always listed, and the results
+          describe only the mapped part of your list.
+        </li>
+        <li>
+          Human pathways only. Counts are of Reactome entities (proteins), so paralogs that share a
+          protein can make "found" smaller than your gene count.
+        </li>
       </ul>
       <form method="dialog"><button class="btn">Close</button></form>
     </dialog>
@@ -128,6 +135,7 @@
           <a href="https://www.ncbi.nlm.nih.gov/clinvar/" data-external>NCBI ClinVar</a> for
           pathogenic-record counts.
         </li>
+        <li>Links out only (nothing is fetched from them): AlphaFold DB and gnomAD.</li>
       </ul>
       <form method="dialog"><button class="btn">Close</button></form>
     </dialog>

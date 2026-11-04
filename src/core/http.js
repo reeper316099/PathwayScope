@@ -4,6 +4,25 @@ import { createCache } from './cache.js';
 
 export const cache = createCache();
 
+const metaListeners = new Set();
+
+// Subscribes to every request outcome ({type:'ok',fromCache,stale,cachedAt} or {type:'error',error}); returns an unsubscribe function.
+export function onRequestMeta(listener) {
+  metaListeners.add(listener);
+  return () => metaListeners.delete(listener);
+}
+
+// Tells listeners (the offline banner) about a request outcome; a faulty listener can never break a request.
+function notify(event) {
+  for (const fn of metaListeners) {
+    try {
+      fn(event);
+    } catch {
+      // Ignore listener errors.
+    }
+  }
+}
+
 // Error with a `kind` the UI can switch on: 'network' | 'timeout' | 'http' | 'blocked' | 'aborted'.
 export class HttpError extends Error {
   constructor(kind, message, { status = null, data = null } = {}) {
@@ -127,7 +146,17 @@ export function getJsonWithMeta(
   if (method !== 'GET' && method !== 'POST')
     throw new HttpError('blocked', 'Only GET and POST are supported.');
   const opts = { method, headers, body, ttl, timeoutMs, signal };
-  return isElectron() ? viaElectron(url, opts) : viaBrowser(url, opts);
+  const pending = isElectron() ? viaElectron(url, opts) : viaBrowser(url, opts);
+  return pending.then(
+    (meta) => {
+      notify({ type: 'ok', ...meta });
+      return meta;
+    },
+    (error) => {
+      notify({ type: 'error', error });
+      throw error;
+    },
+  );
 }
 
 // Convenience wrapper that returns only the data (JSON object, or text for non-JSON responses such as SVG).

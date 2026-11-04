@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="PathwayScope icon: a branching network of connected nodes">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1E1B4B"/>
+      <stop offset="1" stop-color="#14B8A6"/>
+    </linearGradient>
+  </defs>
+  <rect width="1024" height="1024" rx="224" fill="url(#bg)"/>
+  <g fill="none" stroke="#FFFFFF" stroke-width="26" stroke-linecap="round" opacity="0.92">
+    <path d="M250 512 C 360 512 360 300 480 300"/>
+    <path d="M250 512 L 480 512"/>
+    <path d="M250 512 C 360 512 360 724 480 724"/>
+    <path d="M480 300 C 600 300 620 210 760 210"/>
+    <path d="M480 300 C 600 300 620 400 760 400"/>
+    <path d="M480 512 L 760 560"/>
+    <path d="M480 724 C 600 724 620 700 760 700"/>
+    <path d="M480 724 C 600 724 620 820 760 820"/>
+  </g>
+  <g fill="#FFFFFF">
+    <circle cx="480" cy="300" r="46"/>
+    <circle cx="480" cy="512" r="46"/>
+    <circle cx="480" cy="724" r="46"/>
+    <circle cx="760" cy="210" r="38"/>
+    <circle cx="760" cy="400" r="38"/>
+    <circle cx="760" cy="700" r="38"/>
+    <circle cx="760" cy="820" r="38"/>
+  </g>
+  <circle cx="250" cy="512" r="70" fill="#F59E0B"/>
+  <circle cx="760" cy="560" r="46" fill="#F59E0B"/>
+</svg>

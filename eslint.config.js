@@ -19,7 +19,7 @@ export default [
     languageOptions: { globals: { ...globals.node } },
   },
   {
-    files: ['electron/preload.cjs'],
+    files: ['electron/preload.cjs', 'scripts/**/*.cjs'],
     languageOptions: { sourceType: 'commonjs', globals: { ...globals.node } },
   },
   {

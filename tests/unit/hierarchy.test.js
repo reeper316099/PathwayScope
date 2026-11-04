@@ -72,6 +72,15 @@ describe('buildHierarchy (real Reactome subset)', () => {
 });
 
 describe('buildHierarchy (synthetic edge cases)', () => {
+  it('keeps top-level pathways and children in the order Reactome gives them', () => {
+    const h = buildHierarchy([
+      n('R-HSA-1', 'First', 'TopLevelPathway', [n('R-HSA-4', 'c1'), n('R-HSA-5', 'c2')]),
+      n('R-HSA-2', 'Second', 'TopLevelPathway'),
+      n('R-HSA-3', 'Third', 'TopLevelPathway'),
+    ]);
+    expect(h.topLevelStIds).toEqual(['R-HSA-1', 'R-HSA-2', 'R-HSA-3']);
+    expect(h.nodes.get('R-HSA-1').childStIds).toEqual(['R-HSA-4', 'R-HSA-5']);
+  });
   it('links parents and children and marks leaves as lowest-level (structural: no sub-pathways)', () => {
     const h = synthetic();
     expect(h.nodes.get('R-HSA-4').parentStIds.sort()).toEqual(['R-HSA-2', 'R-HSA-3']);

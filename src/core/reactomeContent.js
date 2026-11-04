@@ -191,6 +191,21 @@ export async function getHierarchy(options = {}) {
   return buildHierarchy(raw);
 }
 
+// Downloads a pathway diagram as SVG text (optionally with the analysis overlay for a token); sanitize before inlining.
+export async function getDiagramSvg(stId, { token = null, ...options } = {}) {
+  checkStId(stId);
+  const overlay = token ? `?token=${encodeURIComponent(token)}&resource=TOTAL` : '';
+  const ttl = token ? TTL.analysisSeconds : TTL.contentSeconds;
+  const svg = await getJson(`${CONTENT_BASE}/exporter/diagram/${stId}.svg${overlay}`, {
+    ttl,
+    timeoutMs: 60_000,
+    ...options,
+  });
+  if (typeof svg !== 'string' || !svg.includes('<svg'))
+    throw new Error('Reactome did not return an SVG diagram.');
+  return svg;
+}
+
 // Gets static (IntAct-derived) interactors: { accession, total, interactors:[...] }. `total` comes from the summary endpoint
 // because the details endpoint's own `count` is only the size of the returned page.
 export async function getInteractors(uniprotAccession, { pageSize = 25, ...options } = {}) {
