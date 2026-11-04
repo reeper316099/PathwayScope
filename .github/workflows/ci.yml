@@ -31,8 +31,8 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
       # Only the @hermetic tests run here: they need no live data (the release-info call is answered from a saved fixture).
-      # The tests that call the live Reactome/UniProt/NCBI services run separately in live-tests.yml, because GitHub's shared
-      # runner IPs are often rate-limited by Reactome's CDN (HTTP 429 -> a CORS error in the browser).
+      # The tests that call the live Reactome/UniProt/NCBI services are NOT run in CI (run them by hand: npm run test:e2e:web:live),
+      # because GitHub's shared runner IPs are often rate-limited by Reactome's CDN (HTTP 429 -> a CORS error in the browser).
       - name: Web end-to-end tests (no live services)
         run: npm run test:e2e:web:hermetic
       - name: Keep the Playwright results if something failed

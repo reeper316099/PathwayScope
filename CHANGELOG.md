@@ -31,7 +31,7 @@ First release. PathwayScope is an interactive pathway explorer on top of the [Re
 
 - Verified every API shape with live requests rather than assumptions. Notable findings that shaped the app: Reactome's "ratio" is relative to the whole background (we compute found/total ourselves); FDR is not recomputed when filtering; p-values floor at ~1e-16; "lowest-level pathway" is Reactome's own flag, not simply "has no sub-pathways"; the interactors `count` is only the page size; malformed result tokens return HTTP 500; Reactome sits behind Cloudflare and rate-limits bursts (429), which browsers report as a CORS error.
 - 253 unit tests (about 98% line coverage of the data layer) using real saved API responses as fixtures; 51 end-to-end tests against the live services (browser and Electron); a packaged-app test.
-- CI/CD with GitHub Actions: CI on pull requests (lint, unit tests, build and hermetic end-to-end tests that need no live data), a weekly and on-demand workflow for the live-service tests, Pages deployment on `main`, and a tag-triggered release workflow that builds on all three operating systems and attaches SHA-256 checksums.
+- CI/CD with GitHub Actions: CI on pull requests (lint, unit tests, build and hermetic end-to-end tests that need no live data), Pages deployment on `main`, and a tag-triggered release workflow that builds on all three operating systems and attaches SHA-256 checksums.
 
 ### Known limitations
 

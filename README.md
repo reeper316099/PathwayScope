@@ -137,12 +137,11 @@ PS_PACKAGED_APP="$HOME/pathwayscope-release/mac-arm64/PathwayScope.app/Contents/
 
 ## Releases and automation (GitHub Actions)
 
-| Workflow         | When                                  | What it does                                                                                                                                                                           |
-| ---------------- | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `ci.yml`         | every pull request and push to `main` | `npm ci`, lint, format check, unit tests, web build, and the **hermetic** web end-to-end tests (no live services)                                                                      |
-| `live-tests.yml` | every Monday and on demand            | the web end-to-end tests that call the live Reactome, UniProt and NCBI services (kept apart because GitHub's shared runner IPs are often rate-limited by Reactome's CDN)               |
-| `pages.yml`      | push to `main`                        | builds the web version and deploys it to GitHub Pages                                                                                                                                  |
-| `release.yml`    | push of a tag like `v0.1.0`           | checks the tag matches `package.json`, creates a draft release, builds on Ubuntu, Windows and macOS runners, uploads the installers, adds `SHA256SUMS.txt`, then publishes the release |
+| Workflow      | When                                  | What it does                                                                                                                                                                           |
+| ------------- | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ci.yml`      | every pull request and push to `main` | `npm ci`, lint, format check, unit tests, web build, and the **hermetic** web end-to-end tests (no live services)                                                                      |
+| `pages.yml`   | push to `main`                        | builds the web version and deploys it to GitHub Pages                                                                                                                                  |
+| `release.yml` | push of a tag like `v0.1.0`           | checks the tag matches `package.json`, creates a draft release, builds on Ubuntu, Windows and macOS runners, uploads the installers, adds `SHA256SUMS.txt`, then publishes the release |
 
 Only official `actions/*` actions and the preinstalled GitHub CLI are used, pinned to the current major versions (checkout v7, setup-node v7, upload-artifact v7, configure-pages v6, upload-pages-artifact v5, deploy-pages v5; verified against the GitHub API when the workflows were written). The release job uses the built-in `GITHUB_TOKEN` with `contents: write` only for the jobs that upload.
 
