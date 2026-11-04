@@ -152,6 +152,7 @@ function start() {
       onOpenSession: () =>
         openSessionFile().catch((e) => dialog.showErrorBox('Could not open session', e.message)),
       onClearCache: async () => send('cacheCleared', { removed: await cache.clear() }),
+      onShowDataFolder: () => shell.showItemInFolder(app.getPath('userData')),
       openLink,
       quit: () => app.quit(),
     });

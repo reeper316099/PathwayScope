@@ -30,6 +30,10 @@ async function shoot(page, prefix) {
   await expect(page.locator('.detail-card svg.diagram-svg')).toBeVisible({ timeout: 90_000 });
   await page.waitForTimeout(800);
   await page.screenshot({ path: `${OUT}/${prefix}-browser.png` });
+  await page.getByRole('button', { name: 'Manage stored data' }).click();
+  await expect(page.locator('#data-dialog table.data')).toBeVisible();
+  await page.waitForTimeout(400);
+  await page.screenshot({ path: `${OUT}/${prefix}-stored-data.png` });
 }
 
 test('screenshots: desktop light', async ({ page }) => {

@@ -822,3 +822,40 @@ dialog::backdrop {
 .tree-card input[type='search'] {
   width: 100%;
 }
+
+/* Manage stored data dialog */
+dialog.wide {
+  max-width: min(860px, 94vw);
+  width: 94vw;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.data-section {
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+  margin-top: 12px;
+}
+.data-section h3 {
+  margin: 0;
+}
+.data-list {
+  list-style: none;
+  margin: 6px 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.data-table {
+  max-height: 260px;
+  overflow-y: auto;
+  margin-top: 8px;
+}
+.btn.danger {
+  background: #b91c1c;
+  border-color: #b91c1c;
+  color: #fff;
+}
+.data-section.danger {
+  border-top-color: #b91c1c;
+}

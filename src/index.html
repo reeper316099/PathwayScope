@@ -80,7 +80,10 @@
 
     <footer class="statusbar">
       <span id="data-status">Reactome release: loading…</span>
-      <span class="muted">Educational and research-exploration use only. Not medical advice.</span>
+      <span class="muted"
+        >Educational and research-exploration use only. Not medical advice.
+        <button id="data-btn" class="link-btn" type="button">Manage stored data</button></span
+      >
     </footer>
 
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
@@ -120,6 +123,8 @@
       </ul>
       <form method="dialog"><button class="btn">Close</button></form>
     </dialog>
+
+    <dialog id="data-dialog" class="wide" aria-labelledby="data-title"></dialog>
 
     <dialog id="sources-dialog" aria-labelledby="sources-title">
       <h2 id="sources-title">Data sources</h2>

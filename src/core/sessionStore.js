@@ -51,6 +51,13 @@ export function createStore(storage = safeLocalStorage(), now = () => new Date()
 
   const clearHistory = () => remove(KEYS.history);
 
+  // Removes one history entry.
+  const removeHistory = (type, key) =>
+    write(
+      KEYS.history,
+      getHistory().filter((h) => !(h.type === type && h.key === key)),
+    );
+
   // Lists saved session summaries (newest first) from the small index.
   const listSessions = () => read(KEYS.index, []);
 
@@ -79,6 +86,12 @@ export function createStore(storage = safeLocalStorage(), now = () => new Date()
 
   const getSession = (id) => read(KEYS.session(id), null);
 
+  // Deletes every saved session and its payload.
+  function clearSessions() {
+    for (const { id } of listSessions()) remove(KEYS.session(id));
+    remove(KEYS.index);
+  }
+
   function deleteSession(id) {
     remove(KEYS.session(id));
     write(
@@ -91,6 +104,8 @@ export function createStore(storage = safeLocalStorage(), now = () => new Date()
     getHistory,
     addHistory,
     clearHistory,
+    removeHistory,
+    clearSessions,
     listSessions,
     saveSession,
     getSession,

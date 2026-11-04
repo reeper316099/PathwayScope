@@ -125,7 +125,8 @@ export async function performFetch(req, { cache, limiter, fetchImpl = fetch, now
     const { status, data } = await fetchWithRetry(req, limiter, fetchImpl);
     if (status >= 200 && status < 300) {
       const cachedAt = now();
-      if (req.cacheTtlSeconds > 0) await cache.write(key, { cachedAt, status, data });
+      if (req.cacheTtlSeconds > 0)
+        await cache.write(key, { cachedAt, status, data }, { label: req.label, kind: req.kind });
       return { ok: true, status, data, cachedAt: null, fromCache: false, stale: false };
     }
     return { ok: false, status, data, error: `HTTP ${status}` };

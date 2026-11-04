@@ -59,17 +59,50 @@ export function createCache({
       : { value: entry.value, cachedAt: entry.cachedAt, expired };
   }
 
-  // Stores a value; persistence is skipped (silently) for big values or a full/blocked storage.
-  function set(key, value, ttlSeconds) {
-    const entry = { value, cachedAt: now(), ttlMs: ttlSeconds * 1000 };
-    memory.set(key, entry);
-    if (!storage) return;
+  // Stores a value (with an optional { label, kind } description); persistence is skipped for big values or a full/blocked storage.
+  function set(key, value, ttlSeconds, meta = null) {
+    const entry = { value, cachedAt: now(), ttlMs: ttlSeconds * 1000, meta };
+    let raw;
     try {
-      const raw = JSON.stringify(entry);
-      if (raw.length <= maxPersistChars) storage.setItem(prefix + key, raw);
+      raw = JSON.stringify(entry);
+    } catch {
+      raw = '';
+    }
+    entry.bytes = raw.length;
+    memory.set(key, entry);
+    if (!storage || !raw) return;
+    try {
+      if (raw.length <= maxPersistChars) storage.setItem(prefix + key, JSON.stringify(entry));
     } catch {
       // Quota exceeded or storage blocked: the in-memory copy is still valid.
     }
+  }
+
+  // Lists everything cached (memory and storage) for the "Manage stored data" panel, newest first. Values are not returned.
+  function list() {
+    const byKey = new Map();
+    for (const [key, entry] of memory) byKey.set(key, entry);
+    if (storage) {
+      try {
+        for (const k of Object.keys(storage).filter((name) => name.startsWith(prefix))) {
+          const key = k.slice(prefix.length);
+          if (byKey.has(key)) continue;
+          const entry = JSON.parse(storage.getItem(k));
+          if (entry) byKey.set(key, entry);
+        }
+      } catch {
+        // Unreadable storage: list what memory has.
+      }
+    }
+    return [...byKey]
+      .map(([key, e]) => ({
+        key,
+        label: e.meta?.label ?? 'Cached response',
+        kind: e.meta?.kind ?? 'other',
+        cachedAt: e.cachedAt,
+        bytes: e.bytes ?? 0,
+      }))
+      .sort((a, b) => b.cachedAt - a.cachedAt);
   }
 
   // Empties memory and every persisted entry that belongs to this cache.
@@ -85,5 +118,15 @@ export function createCache({
     }
   }
 
-  return { get, set, clear };
+  // Deletes one cached entry (memory and storage).
+  function remove(key) {
+    memory.delete(key);
+    try {
+      storage?.removeItem(prefix + key);
+    } catch {
+      // Nothing to do if storage is unavailable.
+    }
+  }
+
+  return { get, set, clear, list, remove };
 }

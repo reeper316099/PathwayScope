@@ -9,8 +9,8 @@ function expect(condition, message) {
 // Copies only the option fields the main process understands.
 function pickFetchOptions(options = {}) {
   expect(options && typeof options === 'object', 'options must be an object');
-  const { method, headers, body, cacheTtlSeconds, timeoutMs } = options;
-  return { method, headers, body, cacheTtlSeconds, timeoutMs };
+  const { method, headers, body, cacheTtlSeconds, timeoutMs, label, kind } = options;
+  return { method, headers, body, cacheTtlSeconds, timeoutMs, label, kind };
 }
 
 contextBridge.exposeInMainWorld('api', {
@@ -32,6 +32,13 @@ contextBridge.exposeInMainWorld('api', {
   },
   // Returns app name/version/platform for the About dialog.
   getAppInfo: () => ipcRenderer.invoke('api:getAppInfo'),
+  // Lists cached lookups ({ folder, totalBytes, entries }) for the "Manage stored data" panel.
+  listCache: () => ipcRenderer.invoke('api:listCache'),
+  // Deletes one cached lookup by its key, or every cached lookup with the word "all".
+  deleteCacheEntry: (key) => {
+    expect(typeof key === 'string', 'key must be a string');
+    return ipcRenderer.invoke('api:deleteCacheEntry', key);
+  },
   // One-way subscription to native menu actions (a 5th function beyond the original four; see report).
   onMenuAction: (callback) => {
     expect(typeof callback === 'function', 'callback must be a function');

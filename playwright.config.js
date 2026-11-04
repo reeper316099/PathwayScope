@@ -10,7 +10,7 @@ export default defineConfig({
   expect: { timeout: 30_000 },
   workers: 1, // one at a time: be polite to Reactome's public servers and keep the live-data runs deterministic
   fullyParallel: false,
-  retries: 1, // live public APIs can rate-limit (Cloudflare 429); any test that needs its retry is reported as "flaky"
+  retries: 2, // live public APIs can rate-limit (Cloudflare 429); any test that needs its retry is reported as "flaky"
   reporter: [['list']],
   projects: [
     {

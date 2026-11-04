@@ -83,9 +83,23 @@ export function validateFetchRequest(rawUrl, rawOptions = {}) {
   if (!Number.isFinite(timeout) || timeout <= 0)
     throw new RequestError('bad-option', 'Bad timeout.');
 
+  // Optional human-readable description stored next to a cached response (shown in "Manage stored data").
+  const label =
+    typeof options.label === 'string'
+      ? [...options.label]
+          .filter((c) => c >= ' ')
+          .join('')
+          .slice(0, 160)
+      : null;
+  const kind = ['gene', 'pathway', 'analysis', 'other'].includes(options.kind)
+    ? options.kind
+    : 'other';
+
   return {
     url,
     method,
+    label,
+    kind,
     headers,
     body,
     cacheTtlSeconds: Math.min(Math.floor(ttl), LIMITS.maxCacheTtlSeconds),
@@ -116,4 +130,10 @@ export function validateSaveRequest(req) {
   if (content.length > LIMITS.maxSaveBytes)
     throw new RequestError('bad-save', 'File is too large.');
   return { defaultName, content, encoding };
+}
+
+// Accepts a cache entry key (64 hex characters, as produced by our own cache) or the word "all"; anything else is refused.
+export function validateCacheKey(key) {
+  if (key === 'all' || (typeof key === 'string' && /^[a-f0-9]{64}$/.test(key))) return key;
+  throw new RequestError('bad-key', 'Invalid cache entry key.');
 }

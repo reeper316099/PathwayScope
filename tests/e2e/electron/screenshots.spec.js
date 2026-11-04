@@ -1,7 +1,7 @@
 // Generates the Electron window screenshots (docs/screenshots) from the built desktop app and live Reactome data.
 import fs from 'node:fs';
 import { test } from '@playwright/test';
-import { expect, launch } from './support.js';
+import { clickMenu, expect, launch } from './support.js';
 
 test('screenshots: Electron window (light and dark) for each mode', async () => {
   const { app, win, errors } = await launch();
@@ -33,6 +33,11 @@ test('screenshots: Electron window (light and dark) for each mode', async () => 
   await win.click('#theme-toggle');
   await win.waitForTimeout(600);
   await win.screenshot({ path: 'docs/screenshots/electron-browser-dark.png' });
+  await win.click('#theme-toggle');
+  await clickMenu(app, 'Manage Stored Data…');
+  await expect(win.locator('#data-dialog table.data')).toBeVisible();
+  await win.waitForTimeout(400);
+  await win.screenshot({ path: 'docs/screenshots/electron-stored-data.png' });
   expect(errors).toEqual([]);
   await app.close();
 });

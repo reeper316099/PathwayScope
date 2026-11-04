@@ -1,8 +1,9 @@
-// Registers the IPC handlers behind window.api: fetchJson, saveFile, openExternal, getAppInfo.
+// Registers the IPC handlers behind window.api: fetchJson, saveFile, openExternal, getAppInfo, listCache, deleteCacheEntry.
 import fs from 'node:fs/promises';
 import { performFetch } from './remoteFetch.js';
 import {
   RequestError,
+  validateCacheKey,
   validateExternalUrl,
   validateFetchRequest,
   validateSaveRequest,
@@ -49,6 +50,28 @@ export function registerIpc({
   ipcMain.handle(
     'api:fetchJson',
     guarded((url, options) => performFetch(validateFetchRequest(url, options), { cache, limiter })),
+  );
+
+  ipcMain.handle(
+    'api:listCache',
+    guarded(async () => {
+      const entries = await cache.list();
+      return {
+        ok: true,
+        folder: cache.dir,
+        totalBytes: entries.reduce((n, e) => n + e.bytes, 0),
+        entries,
+      };
+    }),
+  );
+
+  ipcMain.handle(
+    'api:deleteCacheEntry',
+    guarded(async (key) => {
+      const checked = validateCacheKey(key);
+      if (checked === 'all') return { ok: true, removed: await cache.clear() };
+      return { ok: true, removed: (await cache.delete(checked)) ? 1 : 0 };
+    }),
   );
 
   ipcMain.handle(

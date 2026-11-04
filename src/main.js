@@ -1,6 +1,7 @@
 // App bootstrap: hash router for the three modes, shared pathway detail drawer, menu/shortcut actions, offline banner.
 import { cache, isElectron, onRequestMeta } from './core/http.js';
 import { getDatabaseInfo } from './core/reactomeContent.js';
+import { createDataManager } from './ui/dataManager.js';
 import { createEnrichmentView } from './ui/enrichmentView.js';
 import { createGeneExplorer } from './ui/geneExplorer.js';
 import { createBrowserView } from './ui/browserView.js';
@@ -109,6 +110,7 @@ async function handleAction({ action, payload }) {
   else if (action === 'toggleTheme') toggleTheme();
   else if (action === 'about') $('about-dialog').showModal();
   else if (action === 'dataSources') $('sources-dialog').showModal();
+  else if (action === 'manageData') dataManager.open();
   else if (action === 'cacheCleared') {
     cache.clear();
     toast(`Cache cleared (${payload?.removed ?? 0} saved responses removed).`);
@@ -177,12 +179,15 @@ function bindBanner() {
 }
 
 let search;
+let dataManager;
 // Starts everything once the DOM is ready.
 async function boot() {
   initTheme();
   bindBanner();
   $('theme-toggle').addEventListener('click', toggleTheme);
   $('about-btn').addEventListener('click', () => handleAction({ action: 'about' }));
+  dataManager = createDataManager($('data-dialog'));
+  $('data-btn').addEventListener('click', () => dataManager.open());
   $('drawer-close').addEventListener('click', closeDrawer);
   document.addEventListener(
     'keydown',

@@ -84,6 +84,8 @@ describe('getJson (Electron path via window.api)', () => {
       body: 'TP53',
       cacheTtlSeconds: 60,
       timeoutMs: 5000,
+      label: 'Cached POST response from reactome.org',
+      kind: 'other',
     });
   });
   it('maps main-process errors to HttpError kinds', async () => {

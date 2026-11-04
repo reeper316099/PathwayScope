@@ -45,9 +45,12 @@ test('security: sandboxed renderer, no Node, strict CSP, blocked navigation/wind
   expect(
     await win.evaluate(() => [typeof require, typeof process, typeof module, typeof Buffer]),
   ).toEqual(['undefined', 'undefined', 'undefined', 'undefined']);
+  // The exact list of functions the page can call (the whole attack surface of the preload bridge).
   expect(await win.evaluate(() => Object.keys(window.api).sort())).toEqual([
+    'deleteCacheEntry',
     'fetchJson',
     'getAppInfo',
+    'listCache',
     'onMenuAction',
     'openExternal',
     'saveFile',

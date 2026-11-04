@@ -63,3 +63,20 @@ export async function goOffline(app) {
 }
 
 export { expect };
+
+// Clicks a native menu item by its label (synthetic keystrokes cannot reach native accelerators).
+export function clickMenu(app, label) {
+  return app.evaluate(({ Menu }, l) => {
+    const find = (items) => {
+      for (const i of items) {
+        if (i.label === l) return i;
+        if (i.submenu) {
+          const f = find(i.submenu.items);
+          if (f) return f;
+        }
+      }
+      return null;
+    };
+    find(Menu.getApplicationMenu().items).click();
+  }, label);
+}

@@ -1,6 +1,7 @@
 // THE network adapter. Every request in the app goes through getJson(); nothing else may call fetch.
 // In Electron it uses window.api.fetchJson (main process: allowlist, rate limit, disk cache). In a browser it uses fetch().
 import { createCache } from './cache.js';
+import { describeRequest } from './describe.js';
 
 export const cache = createCache();
 
@@ -76,6 +77,8 @@ async function viaElectron(url, opts) {
       body: opts.body,
       cacheTtlSeconds: opts.ttl,
       timeoutMs: opts.timeoutMs,
+      label: opts.label.label,
+      kind: opts.label.kind,
     }),
     opts.signal,
   );
@@ -175,7 +178,7 @@ async function viaBrowser(url, opts) {
       if (opts.signal?.aborted) throw new HttpError('aborted', 'Request cancelled.');
       data = await browserAttempt(url, opts);
     }
-    if (opts.ttl > 0) cache.set(key, data, opts.ttl);
+    if (opts.ttl > 0) cache.set(key, data, opts.ttl, opts.label);
     return { data, cachedAt: null, fromCache: false, stale: false };
   } catch (error) {
     if (error instanceof HttpError && error.kind === 'network') {
@@ -194,7 +197,15 @@ export function getJsonWithMeta(
 ) {
   if (method !== 'GET' && method !== 'POST')
     throw new HttpError('blocked', 'Only GET and POST are supported.');
-  const opts = { method, headers, body, ttl, timeoutMs, signal };
+  const opts = {
+    method,
+    headers,
+    body,
+    ttl,
+    timeoutMs,
+    signal,
+    label: describeRequest(method, url, body),
+  };
   const pending = isElectron() ? viaElectron(url, opts) : viaBrowser(url, opts);
   return pending.then(
     (meta) => {

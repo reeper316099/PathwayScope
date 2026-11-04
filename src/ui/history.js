@@ -17,7 +17,7 @@ export function mountHistory({ historyEl, sessionsEl, onOpenGene, onOpenPathway,
             history.slice(0, 8).map((entry) =>
               h(
                 'li',
-                {},
+                { class: 'row-between' },
                 h(
                   'button',
                   {
@@ -33,9 +33,35 @@ export function mountHistory({ historyEl, sessionsEl, onOpenGene, onOpenPathway,
                   },
                   entry.label,
                 ),
+                h(
+                  'button',
+                  {
+                    class: 'icon-x',
+                    type: 'button',
+                    'aria-label': `Remove ${entry.label} from history`,
+                    onclick: () => {
+                      store.removeHistory(entry.type, entry.key);
+                      render();
+                    },
+                  },
+                  '✕',
+                ),
               ),
             ),
           ),
+      history.length > 0 &&
+        h(
+          'button',
+          {
+            class: 'link-btn small',
+            type: 'button',
+            onclick: () => {
+              store.clearHistory();
+              render();
+            },
+          },
+          'Clear history',
+        ),
     );
     const sessions = store.listSessions();
     setChildren(

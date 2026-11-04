@@ -2,7 +2,15 @@
 import { Menu } from 'electron';
 
 // Creates and installs the menu. `send(action, payload)` forwards actions to the renderer.
-export function buildMenu({ isMac, send, onOpenSession, onClearCache, openLink, quit }) {
+export function buildMenu({
+  isMac,
+  send,
+  onOpenSession,
+  onClearCache,
+  onShowDataFolder,
+  openLink,
+  quit,
+}) {
   const item = (label, accelerator, action) => ({ label, accelerator, click: () => send(action) });
   const template = [
     ...(isMac ? [{ role: 'appMenu' }] : []),
@@ -13,6 +21,8 @@ export function buildMenu({ isMac, send, onOpenSession, onClearCache, openLink, 
         item('Save Session…', 'CmdOrCtrl+S', 'saveSession'),
         item('Export CSV…', 'CmdOrCtrl+E', 'exportCsv'),
         { type: 'separator' },
+        item('Manage Stored Data…', null, 'manageData'),
+        { label: 'Show Data Folder', click: onShowDataFolder },
         { label: 'Clear Cache', click: onClearCache },
         { type: 'separator' },
         { label: 'Quit', accelerator: isMac ? 'Cmd+Q' : 'Ctrl+Q', click: quit },
