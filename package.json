@@ -1,5 +1,6 @@
 {
   "name": "pathwayscope",
+  "productName": "PathwayScope",
   "version": "0.1.0",
   "description": "Interactive pathway explorer and enrichment analysis built on the Reactome knowledgebase.",
   "private": true,
@@ -29,6 +30,8 @@
     "build:electron": "vite build --mode electron",
     "start:electron": "npm run build:electron && electron .",
     "dist": "npm run build:electron && electron-builder",
+    "dist:dir": "npm run build:electron && electron-builder --dir",
+    "test:e2e:packaged": "playwright test --project=packaged",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "build:web:e2e": "PS_OUT_DIR=../dist-web vite build --mode web",

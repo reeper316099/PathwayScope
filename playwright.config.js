@@ -19,6 +19,7 @@ export default defineConfig({
       use: { baseURL: 'http://localhost:4173', channel, viewport: { width: 1400, height: 900 } },
     },
     { name: 'electron', testMatch: /electron\/.*\.spec\.js/ },
+    { name: 'packaged', testMatch: /packaged\/.*\.spec\.js/ },
   ],
   webServer: {
     command:

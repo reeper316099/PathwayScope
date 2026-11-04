@@ -1,0 +1,43 @@
+# CI: lint, unit tests, web build and the web end-to-end tests on every pull request and push to main.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Lint and format check
+        run: |
+          npm run lint
+          npx prettier --check .
+      - name: Unit tests
+        run: npm test
+      - name: Web build
+        run: npm run build:web
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+      # These tests call the live public Reactome, UniProt and NCBI services. A shared CI IP can be rate-limited
+      # (HTTP 429), so Playwright retries failures twice and reports retried tests as "flaky".
+      - name: Web end-to-end tests
+        run: npm run test:e2e:web
+      - name: Keep the Playwright results if something failed
+        if: failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-results
+          path: test-results/
+          retention-days: 7
