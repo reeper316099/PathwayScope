@@ -1,0 +1,36 @@
+/* Design tokens: every color, radius and shadow lives here; dark mode overrides the same names. */
+:root {
+  --bg: #f4f5fb;
+  --surface: #ffffff;
+  --surface-2: #eceef8;
+  --text: #0f172a;
+  --text-muted: #475569;
+  --border: #d5d9ea;
+  --primary: #3b3ba8;
+  --primary-contrast: #ffffff;
+  --header-from: #1e1b4b;
+  --header-to: #0f766e;
+  --secondary: #14b8a6;
+  --accent: #f59e0b;
+  --strong: #7c3aed;
+  --moderate: #2563eb;
+  --weak: #38bdf8;
+  --none: #94a3b8;
+  --shadow: 0 2px 10px rgb(30 27 75 / 10%);
+  --radius: 14px;
+  --focus: #b45309;
+  --t: 180ms;
+}
+
+[data-theme='dark'] {
+  --bg: #0b1020;
+  --surface: #151b2e;
+  --surface-2: #1d2540;
+  --text: #e5e7eb;
+  --text-muted: #a9b4c8;
+  --border: #2c3558;
+  --primary: #9a9af5;
+  --primary-contrast: #0b1020;
+  --shadow: 0 2px 12px rgb(0 0 0 / 45%);
+  --focus: #fbbf24;
+}

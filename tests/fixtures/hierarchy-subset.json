@@ -1,0 +1,118 @@
+{
+  "_fixture": {
+    "description": "REAL saved API response used only by unit tests (not shipped data).",
+    "source": "GET /data/eventsHierarchy/9606",
+    "retrievedAt": "2026-11-04T03:49:33.737Z",
+    "reactomeRelease": 98,
+    "note": "Pruned subset of the real response: all ancestor chains of R-HSA-5683329 (a real pathway with 2+ parents), plus its child pathways, plus one real reaction node per kept pathway. Tree shape/names/IDs are unmodified.",
+    "multiParentStId": "R-HSA-5683329"
+  },
+  "data": [
+    {
+      "stId": "R-HSA-1643685",
+      "name": "Disease",
+      "species": "Homo sapiens",
+      "type": "TopLevelPathway",
+      "diagram": true,
+      "totalEntity": 3094,
+      "totalEntityAndInteractors": 9773,
+      "children": [
+        {
+          "stId": "R-HSA-5619115",
+          "name": "Disorders of transmembrane transporters",
+          "species": "Homo sapiens",
+          "type": "Pathway",
+          "diagram": true,
+          "totalEntity": 266,
+          "totalEntityAndInteractors": 1300,
+          "children": [
+            {
+              "stId": "R-HSA-5619084",
+              "name": "ABC transporter disorders",
+              "species": "Homo sapiens",
+              "type": "Pathway",
+              "diagram": true,
+              "totalEntity": 86,
+              "totalEntityAndInteractors": 1064,
+              "children": [
+                {
+                  "stId": "R-HSA-5683329",
+                  "name": "Defective ABCD4 causes MAHCJ",
+                  "species": "Homo sapiens",
+                  "type": "Pathway",
+                  "diagram": true,
+                  "totalEntity": 5,
+                  "totalEntityAndInteractors": 5,
+                  "children": [
+                    {
+                      "stId": "R-HSA-5683325",
+                      "name": "Defective ABCD4:LMBRD1 does not transport Cbl from lysosomal lumen to cytosol",
+                      "species": "Homo sapiens",
+                      "type": "FailedReaction",
+                      "diagram": false,
+                      "totalEntity": 0,
+                      "totalEntityAndInteractors": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "stId": "R-HSA-5668914",
+          "name": "Diseases of metabolism",
+          "species": "Homo sapiens",
+          "type": "Pathway",
+          "diagram": true,
+          "totalEntity": 460,
+          "totalEntityAndInteractors": 611,
+          "children": [
+            {
+              "stId": "R-HSA-3296482",
+              "name": "Defects in vitamin and cofactor metabolism",
+              "species": "Homo sapiens",
+              "type": "Pathway",
+              "diagram": true,
+              "totalEntity": 42,
+              "totalEntityAndInteractors": 67,
+              "children": [
+                {
+                  "stId": "R-HSA-3296469",
+                  "name": "Defects in cobalamin (B12) metabolism",
+                  "species": "Homo sapiens",
+                  "type": "Pathway",
+                  "diagram": true,
+                  "totalEntity": 31,
+                  "totalEntityAndInteractors": 56,
+                  "children": [
+                    {
+                      "stId": "R-HSA-5683329",
+                      "name": "Defective ABCD4 causes MAHCJ",
+                      "species": "Homo sapiens",
+                      "type": "Pathway",
+                      "diagram": true,
+                      "totalEntity": 5,
+                      "totalEntityAndInteractors": 5,
+                      "children": [
+                        {
+                          "stId": "R-HSA-5683325",
+                          "name": "Defective ABCD4:LMBRD1 does not transport Cbl from lysosomal lumen to cytosol",
+                          "species": "Homo sapiens",
+                          "type": "FailedReaction",
+                          "diagram": false,
+                          "totalEntity": 0,
+                          "totalEntityAndInteractors": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

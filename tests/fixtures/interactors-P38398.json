@@ -1,0 +1,60 @@
+{
+  "_fixture": {
+    "description": "REAL saved API response used only by unit tests (not shipped data).",
+    "source": "GET /interactors/static/molecule/P38398/details?pageSize=5&page=1",
+    "retrievedAt": "2026-11-04T03:49:33.737Z",
+    "reactomeRelease": 98,
+    "note": "Unmodified except evidencesURL removed (very long)."
+  },
+  "data": {
+    "resource": "static",
+    "entities": [
+      {
+        "acc": "P38398",
+        "count": 5,
+        "interactors": [
+          {
+            "acc": "Q9BX63",
+            "alias": "BRIP1",
+            "id": 11253866,
+            "evidences": 33,
+            "score": 0.979,
+            "accURL": "http://purl.uniprot.org/uniprot/Q9BX63"
+          },
+          {
+            "acc": "Q99728",
+            "alias": "BARD1",
+            "id": 11203280,
+            "evidences": 20,
+            "score": 0.958,
+            "accURL": "http://purl.uniprot.org/uniprot/Q99728"
+          },
+          {
+            "acc": "Q99708",
+            "alias": "RBBP8",
+            "id": 11238346,
+            "evidences": 15,
+            "score": 0.935,
+            "accURL": "http://purl.uniprot.org/uniprot/Q99708"
+          },
+          {
+            "acc": "Q86YC2",
+            "alias": "PALB2",
+            "id": 11299382,
+            "evidences": 27,
+            "score": 0.909,
+            "accURL": "http://purl.uniprot.org/uniprot/Q86YC2"
+          },
+          {
+            "acc": "Q6UWZ7",
+            "alias": "ABRAXAS1",
+            "id": 11326986,
+            "evidences": 16,
+            "score": 0.86,
+            "accURL": "http://purl.uniprot.org/uniprot/Q6UWZ7"
+          }
+        ]
+      }
+    ]
+  }
+}

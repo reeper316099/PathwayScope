@@ -1,0 +1,730 @@
+{
+  "_fixture": {
+    "description": "REAL saved API response used only by unit tests (not shipped data).",
+    "source": "POST /AnalysisService/identifiers/projection?...&pageSize=25 (body below)",
+    "retrievedAt": "2026-11-04T03:49:33.737Z",
+    "reactomeRelease": 98,
+    "note": "Real response; pathways array is the first 25 rows (sorted by FDR). Summary, pathwaysFound and identifiersNotFound unmodified.",
+    "requestBody": "#fixture\nTP53\nBRCA1\nEGFR\nMTOR\nATM\nCHEK2\nKRAS\nNOTAGENE\nher2"
+  },
+  "data": {
+    "summary": {
+      "token": "MjAyNjExMDQwMzQ0MzBfNTM4NQ%3D%3D",
+      "projection": true,
+      "interactors": false,
+      "type": "OVERREPRESENTATION",
+      "sampleName": "fixture",
+      "text": true,
+      "includeDisease": true
+    },
+    "expression": {
+      "columnNames": []
+    },
+    "identifiersNotFound": 1,
+    "pathwaysFound": 383,
+    "pathways": [
+      {
+        "stId": "R-HSA-212436",
+        "dbId": 212436,
+        "name": "Generic Transcription Pathway",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": true,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 1575,
+          "found": 15,
+          "ratio": 0.0967741935483871,
+          "pValue": 1.620592549045341e-12,
+          "fdr": 6.676841302066805e-10,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 880,
+          "found": 189,
+          "ratio": 0.054425134516667695
+        },
+        "inDisease": false
+      },
+      {
+        "stId": "R-HSA-6796648",
+        "dbId": 6796648,
+        "name": "TP53 Regulates Transcription of DNA Repair Genes",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": true,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 86,
+          "found": 7,
+          "ratio": 0.005284178187403994,
+          "pValue": 5.483058451716261e-12,
+          "fdr": 7.511790078851277e-10,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 17,
+          "found": 15,
+          "ratio": 0.0010513946440719895
+        },
+        "inDisease": false
+      },
+      {
+        "stId": "R-HSA-73857",
+        "dbId": 73857,
+        "name": "RNA Polymerase II Transcription",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": false,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 1679,
+          "found": 15,
+          "ratio": 0.10316436251920123,
+          "pValue": 4.118594354451943e-12,
+          "fdr": 7.511790078851277e-10,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 940,
+          "found": 189,
+          "ratio": 0.058135939142804134
+        },
+        "inDisease": false
+      },
+      {
+        "stId": "R-HSA-74160",
+        "dbId": 74160,
+        "name": "Gene expression (Transcription)",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": false,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 1924,
+          "found": 15,
+          "ratio": 0.11821812596006144,
+          "pValue": 2.983635560838138e-11,
+          "fdr": 3.0731446276632823e-9,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 1149,
+          "found": 189,
+          "ratio": 0.07106190859051272
+        },
+        "inDisease": false
+      },
+      {
+        "stId": "R-HSA-3700989",
+        "dbId": 3700989,
+        "name": "Transcriptional Regulation by TP53",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": true,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 488,
+          "found": 10,
+          "ratio": 0.02998463901689708,
+          "pValue": 4.232880712606857e-11,
+          "fdr": 3.4709621843376226e-9,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 258,
+          "found": 179,
+          "ratio": 0.015956459892386667
+        },
+        "inDisease": false
+      },
+      {
+        "stId": "R-HSA-6806003",
+        "dbId": 6806003,
+        "name": "Regulation of TP53 Expression and Degradation",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": true,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 46,
+          "found": 5,
+          "ratio": 0.00282642089093702,
+          "pValue": 2.029353907140319e-9,
+          "fdr": 1.3799606568554168e-7,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 35,
+          "found": 21,
+          "ratio": 0.00216463603191292
+        },
+        "inDisease": false
+      },
+      {
+        "stId": "R-HSA-1963640",
+        "dbId": 1963640,
+        "name": "GRB2 events in ERBB2 signaling",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": true,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 21,
+          "found": 4,
+          "ratio": 0.0012903225806451613,
+          "pValue": 1.0579154441359151e-8,
+          "fdr": 5.395368765093167e-7,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 4,
+          "found": 4,
+          "ratio": 0.00024738697507576226
+        },
+        "inDisease": false
+      },
+      {
+        "stId": "R-HSA-8866910",
+        "dbId": 8866910,
+        "name": "TFAP2 (AP-2) family regulates transcription of growth factors and their receptors",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": true,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 21,
+          "found": 4,
+          "ratio": 0.0012903225806451613,
+          "pValue": 1.0579154441359151e-8,
+          "fdr": 5.395368765093167e-7,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 18,
+          "found": 4,
+          "ratio": 0.0011132413878409302
+        },
+        "inDisease": false
+      },
+      {
+        "stId": "R-HSA-9665348",
+        "dbId": 9665348,
+        "name": "Signaling by ERBB2 ECD mutants",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": true,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 23,
+          "found": 4,
+          "ratio": 0.00141321044546851,
+          "pValue": 1.5200028458117743e-8,
+          "fdr": 6.840012806152984e-7,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 15,
+          "found": 15,
+          "ratio": 0.0009277011565341084
+        },
+        "inDisease": true
+      },
+      {
+        "stId": "R-HSA-9665686",
+        "dbId": 9665686,
+        "name": "Signaling by ERBB2 TMD/JMD mutants",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": true,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 30,
+          "found": 4,
+          "ratio": 0.0018433179723502304,
+          "pValue": 4.376987883247807e-8,
+          "fdr": 0.0000016194855168016886,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 13,
+          "found": 13,
+          "ratio": 0.0008040076689962274
+        },
+        "inDisease": true
+      },
+      {
+        "stId": "R-HSA-5633007",
+        "dbId": 5633007,
+        "name": "Regulation of TP53 Activity",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": true,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 179,
+          "found": 6,
+          "ratio": 0.010998463901689709,
+          "pValue": 4.246794182982683e-8,
+          "fdr": 0.0000016194855168016886,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 97,
+          "found": 71,
+          "ratio": 0.005999134145587235
+        },
+        "inDisease": false
+      },
+      {
+        "stId": "R-HSA-9664565",
+        "dbId": 9664565,
+        "name": "Signaling by ERBB2 KD Mutants",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": true,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 35,
+          "found": 4,
+          "ratio": 0.002150537634408602,
+          "pValue": 8.079051150300387e-8,
+          "fdr": 0.0000026204491255787943,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 17,
+          "found": 17,
+          "ratio": 0.0010513946440719895
+        },
+        "inDisease": true
+      },
+      {
+        "stId": "R-HSA-1227990",
+        "dbId": 1227990,
+        "name": "Signaling by ERBB2 in Cancer",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": false,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 36,
+          "found": 4,
+          "ratio": 0.0022119815668202765,
+          "pValue": 9.036031467513084e-8,
+          "fdr": 0.0000026204491255787943,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 62,
+          "found": 62,
+          "ratio": 0.003834498113674315
+        },
+        "inDisease": true
+      },
+      {
+        "stId": "R-HSA-1250196",
+        "dbId": 1250196,
+        "name": "SHC1 events in ERBB2 signaling",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": true,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 36,
+          "found": 4,
+          "ratio": 0.0022119815668202765,
+          "pValue": 9.036031467513084e-8,
+          "fdr": 0.0000026204491255787943,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 6,
+          "found": 4,
+          "ratio": 0.0003710804626136434
+        },
+        "inDisease": false
+      },
+      {
+        "stId": "R-HSA-6804757",
+        "dbId": 6804757,
+        "name": "Regulation of TP53 Degradation",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": true,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 43,
+          "found": 4,
+          "ratio": 0.002642089093701997,
+          "pValue": 1.8297772941267e-7,
+          "fdr": 0.00000494039869414209,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 30,
+          "found": 16,
+          "ratio": 0.0018554023130682169
+        },
+        "inDisease": false
+      },
+      {
+        "stId": "R-HSA-8864260",
+        "dbId": 8864260,
+        "name": "Transcriptional regulation by the AP-2 (TFAP2) family of transcription factors",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": true,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 52,
+          "found": 4,
+          "ratio": 0.003195084485407066,
+          "pValue": 3.8873447083531687e-7,
+          "fdr": 0.000009718361770882922,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 44,
+          "found": 4,
+          "ratio": 0.0027212567258333847
+        },
+        "inDisease": false
+      },
+      {
+        "stId": "R-HSA-2179392",
+        "dbId": 2179392,
+        "name": "EGFR Transactivation by Gastrin",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": true,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 13,
+          "found": 3,
+          "ratio": 0.0007987711213517665,
+          "pValue": 4.891341908175306e-7,
+          "fdr": 0.000011739220579620735,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 6,
+          "found": 3,
+          "ratio": 0.0003710804626136434
+        },
+        "inDisease": false
+      },
+      {
+        "stId": "R-HSA-9634285",
+        "dbId": 9634285,
+        "name": "Constitutive Signaling by Overexpressed ERBB2",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": true,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 16,
+          "found": 3,
+          "ratio": 0.0009831029185867896,
+          "pValue": 9.099075372054344e-7,
+          "fdr": 0.000019108058281314122,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 8,
+          "found": 8,
+          "ratio": 0.0004947739501515245
+        },
+        "inDisease": true
+      },
+      {
+        "stId": "R-HSA-179812",
+        "dbId": 179812,
+        "name": "GRB2 events in EGFR signaling",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": true,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 16,
+          "found": 3,
+          "ratio": 0.0009831029185867896,
+          "pValue": 9.099075372054344e-7,
+          "fdr": 0.000019108058281314122,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 3,
+          "found": 2,
+          "ratio": 0.0001855402313068217
+        },
+        "inDisease": false
+      },
+      {
+        "stId": "R-HSA-5693565",
+        "dbId": 5693565,
+        "name": "Recruitment and ATM-mediated phosphorylation of repair and signaling proteins at DNA double strand breaks",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": true,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 68,
+          "found": 4,
+          "ratio": 0.004178187403993856,
+          "pValue": 0.0000011234289990502688,
+          "fdr": 0.000021345150981955108,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 41,
+          "found": 39,
+          "ratio": 0.0025357164945265633
+        },
+        "inDisease": false
+      },
+      {
+        "stId": "R-HSA-1227986",
+        "dbId": 1227986,
+        "name": "Signaling by ERBB2",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": true,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 68,
+          "found": 4,
+          "ratio": 0.004178187403993856,
+          "pValue": 0.0000011234289990502688,
+          "fdr": 0.000021345150981955108,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 46,
+          "found": 37,
+          "ratio": 0.002844950213371266
+        },
+        "inDisease": false
+      },
+      {
+        "stId": "R-HSA-9006927",
+        "dbId": 9006927,
+        "name": "Signaling by Non-Receptor Tyrosine Kinases",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": false,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 71,
+          "found": 4,
+          "ratio": 0.004362519201228879,
+          "pValue": 0.0000013322366380075223,
+          "fdr": 0.00002264802284612788,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 53,
+          "found": 10,
+          "ratio": 0.00327787741975385
+        },
+        "inDisease": false
+      },
+      {
+        "stId": "R-HSA-8848021",
+        "dbId": 8848021,
+        "name": "Signaling by PTK6",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": false,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 71,
+          "found": 4,
+          "ratio": 0.004362519201228879,
+          "pValue": 0.0000013322366380075223,
+          "fdr": 0.00002264802284612788,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 53,
+          "found": 10,
+          "ratio": 0.00327787741975385
+        },
+        "inDisease": false
+      },
+      {
+        "stId": "R-HSA-180336",
+        "dbId": 180336,
+        "name": "SHC1 events in EGFR signaling",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": true,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 19,
+          "found": 3,
+          "ratio": 0.0011674347158218126,
+          "pValue": 0.0000015203286100051727,
+          "fdr": 0.000024325257760082764,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 4,
+          "found": 4,
+          "ratio": 0.00024738697507576226
+        },
+        "inDisease": false
+      },
+      {
+        "stId": "R-HSA-5663202",
+        "dbId": 5663202,
+        "name": "Diseases of signal transduction by growth factor receptors and second messengers",
+        "species": {
+          "dbId": 48887,
+          "taxId": "9606",
+          "name": "Homo sapiens"
+        },
+        "llp": false,
+        "entities": {
+          "resource": "TOTAL",
+          "total": 536,
+          "found": 7,
+          "ratio": 0.03293394777265745,
+          "pValue": 0.0000014922886171220284,
+          "fdr": 0.000024325257760082764,
+          "exp": []
+        },
+        "reactions": {
+          "resource": "TOTAL",
+          "total": 516,
+          "found": 148,
+          "ratio": 0.031912919784773335
+        },
+        "inDisease": true
+      }
+    ],
+    "resourceSummary": [
+      {
+        "resource": "TOTAL",
+        "pathways": 383,
+        "filtered": 383
+      },
+      {
+        "resource": "UNIPROT",
+        "pathways": 380,
+        "filtered": 380
+      },
+      {
+        "resource": "ENSEMBL",
+        "pathways": 28,
+        "filtered": 28
+      }
+    ],
+    "speciesSummary": [
+      {
+        "dbId": 48887,
+        "taxId": "9606",
+        "name": "Homo sapiens",
+        "pathways": 383,
+        "filtered": 383
+      }
+    ],
+    "warnings": []
+  }
+}

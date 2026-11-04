@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PathwayScope</title>
+    <link rel="stylesheet" href="./styles/tokens.css" />
+    <link rel="stylesheet" href="./styles/base.css" />
+    <link rel="stylesheet" href="./styles/components.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">◈</span> PathwayScope</div>
+      <form id="global-search" class="search" role="search" autocomplete="off">
+        <label class="visually-hidden" for="search-input">Search a gene or pathway</label>
+        <input
+          id="search-input"
+          type="search"
+          placeholder="Search a gene or pathway   (Ctrl/Cmd+K)"
+        />
+      </form>
+      <button
+        id="theme-toggle"
+        class="icon-btn"
+        type="button"
+        aria-pressed="false"
+        aria-label="Toggle dark mode"
+      >
+        ◐ Theme
+      </button>
+      <button id="about-btn" class="icon-btn" type="button">About</button>
+    </header>
+
+    <div id="banner" class="banner" role="status" hidden></div>
+
+    <div class="layout">
+      <nav class="rail" aria-label="Modes">
+        <ul class="modes">
+          <li>
+            <a href="#/explorer" data-mode="explorer"
+              ><span aria-hidden="true">①</span> Gene Explorer</a
+            >
+          </li>
+          <li>
+            <a href="#/enrichment" data-mode="enrichment"
+              ><span aria-hidden="true">②</span> Enrichment</a
+            >
+          </li>
+          <li>
+            <a href="#/browser" data-mode="browser"
+              ><span aria-hidden="true">③</span> Pathway Browser</a
+            >
+          </li>
+        </ul>
+        <section class="rail-section" aria-labelledby="history-title">
+          <h2 id="history-title">History</h2>
+          <p class="muted">No searches or analyses yet.</p>
+        </section>
+        <section class="rail-section" aria-labelledby="sessions-title">
+          <h2 id="sessions-title">Saved sessions</h2>
+          <p class="muted">No saved sessions yet.</p>
+        </section>
+      </nav>
+
+      <main id="workspace" class="workspace" tabindex="-1">
+        <section class="view card" data-view="explorer" hidden>
+          <h1>Gene Explorer</h1>
+          <p>
+            Enter a human gene symbol (for example TP53) to see every Reactome pathway it takes part
+            in and where those pathways sit in the hierarchy.
+          </p>
+        </section>
+        <section class="view card" data-view="enrichment" hidden>
+          <h1>Enrichment Analysis</h1>
+          <p>
+            Paste a gene list to test which pathways contain more of your genes than chance would
+            predict. Results are hypothesis-generating, not proof.
+          </p>
+        </section>
+        <section class="view card" data-view="browser" hidden>
+          <h1>Pathway Browser</h1>
+          <p>
+            Browse the full human Reactome pathway hierarchy and open any pathway for its summary,
+            participants, references and diagram.
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <footer class="statusbar">
+      <span id="data-status">Reactome release: loading…</span>
+      <span class="muted">Educational and research-exploration use only. Not medical advice.</span>
+    </footer>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <dialog id="about-dialog" aria-labelledby="about-title">
+      <h2 id="about-title">About PathwayScope</h2>
+      <p id="about-version" class="muted"></p>
+      <p>
+        PathwayScope is an interactive explorer for the
+        <a href="https://reactome.org" data-external>Reactome</a> pathway knowledgebase. Educational
+        and research-exploration use only. It is not medical advice.
+      </p>
+      <ul>
+        <li>Pathway enrichment is hypothesis-generating, not proof.</li>
+        <li>
+          Results depend on the background (the set of entities Reactome compares against) and on
+          how identifiers map.
+        </li>
+        <li>Human pathways only.</li>
+      </ul>
+      <form method="dialog"><button class="btn">Close</button></form>
+    </dialog>
+
+    <dialog id="sources-dialog" aria-labelledby="sources-title">
+      <h2 id="sources-title">Data sources</h2>
+      <ul>
+        <li>
+          <a href="https://reactome.org" data-external>Reactome</a> Content and Analysis Services
+          (data released under CC0).
+        </li>
+        <li>
+          <a href="https://www.uniprot.org" data-external>UniProt</a> for protein names and
+          accessions.
+        </li>
+        <li>
+          <a href="https://www.ncbi.nlm.nih.gov/clinvar/" data-external>NCBI ClinVar</a> for
+          pathogenic-record counts.
+        </li>
+      </ul>
+      <form method="dialog"><button class="btn">Close</button></form>
+    </dialog>
+
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

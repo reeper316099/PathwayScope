@@ -1,0 +1,216 @@
+/* Component styles: top bar, rail/tab bar, cards, buttons, banner, toast, dialogs. */
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  background: linear-gradient(90deg, var(--header-from), var(--header-to));
+  color: #fff;
+}
+.brand {
+  font-weight: 700;
+  font-size: 1.15rem;
+  white-space: nowrap;
+}
+.search {
+  flex: 1;
+  max-width: 520px;
+}
+.search input {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: rgb(255 255 255 / 92%);
+  color: #0f172a;
+  font: inherit;
+}
+.icon-btn {
+  background: rgb(255 255 255 / 14%);
+  color: #fff;
+  border: 1px solid rgb(255 255 255 / 35%);
+  border-radius: 999px;
+  padding: 6px 12px;
+  font: inherit;
+  cursor: pointer;
+  transition: background var(--t);
+}
+.icon-btn:hover {
+  background: rgb(255 255 255 / 26%);
+}
+
+.banner {
+  padding: 8px 16px;
+  background: var(--accent);
+  color: #1f1300;
+  font-weight: 600;
+}
+.banner[hidden] {
+  display: none;
+}
+
+.rail {
+  align-self: start;
+  position: sticky;
+  top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.modes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.modes a {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  transition:
+    transform var(--t),
+    box-shadow var(--t);
+}
+.modes a:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+.modes a[aria-current='page'] {
+  background: var(--primary);
+  color: var(--primary-contrast);
+  border-color: var(--primary);
+  font-weight: 600;
+}
+.rail-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+}
+.rail-section p {
+  margin: 0;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px;
+}
+.view[hidden] {
+  display: none;
+}
+
+.btn {
+  background: var(--primary);
+  color: var(--primary-contrast);
+  border: 0;
+  border-radius: 10px;
+  padding: 8px 16px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.statusbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 8px 16px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  font-size: 0.85rem;
+}
+
+.toast {
+  position: fixed;
+  right: 16px;
+  bottom: 56px;
+  background: var(--header-from);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity var(--t),
+    transform var(--t);
+  pointer-events: none;
+  max-width: 80vw;
+}
+.toast.show {
+  opacity: 1;
+  transform: none;
+}
+
+dialog {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  max-width: 520px;
+  box-shadow: var(--shadow);
+}
+dialog::backdrop {
+  background: rgb(0 0 0 / 45%);
+}
+
+/* Narrow screens: the rail becomes a fixed bottom tab bar and the extra sections are hidden. */
+@media (max-width: 1024px) {
+  .rail {
+    position: fixed;
+    inset: auto 0 0 0;
+    top: auto;
+    z-index: 5;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 6px;
+  }
+  .rail-section {
+    display: none;
+  }
+  .modes {
+    flex-direction: row;
+  }
+  .modes li {
+    flex: 1;
+  }
+  .modes a {
+    justify-content: center;
+    text-align: center;
+    font-size: 0.85rem;
+    padding: 8px 4px;
+  }
+  .statusbar {
+    margin-bottom: 64px;
+  }
+  .toast {
+    bottom: 140px;
+  }
+}
+@media (max-width: 640px) {
+  .brand {
+    font-size: 1rem;
+  }
+  .icon-btn {
+    padding: 6px 8px;
+  }
+  .topbar {
+    flex-wrap: wrap;
+  }
+  .search {
+    order: 3;
+    flex-basis: 100%;
+    max-width: none;
+  }
+}

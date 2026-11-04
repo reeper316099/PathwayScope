@@ -1,0 +1,6 @@
+dist
+release
+node_modules
+scratch
+package-lock.json
+docs

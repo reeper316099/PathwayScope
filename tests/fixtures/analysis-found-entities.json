@@ -1,0 +1,122 @@
+{
+  "_fixture": {
+    "description": "REAL saved API response used only by unit tests (not shipped data).",
+    "source": "GET /AnalysisService/token/{token}/found/entities/R-HSA-212436",
+    "retrievedAt": "2026-11-04T03:49:33.737Z",
+    "reactomeRelease": 98,
+    "note": "Unmodified.",
+    "pathwayStId": "R-HSA-212436"
+  },
+  "data": {
+    "identifiers": [
+      {
+        "id": "her2",
+        "exp": [],
+        "mapsTo": [
+          {
+            "resource": "ENSEMBL",
+            "ids": ["ENSG00000141736"]
+          },
+          {
+            "resource": "UNIPROT",
+            "ids": ["P04626"]
+          }
+        ]
+      },
+      {
+        "id": "MTOR",
+        "exp": [],
+        "mapsTo": [
+          {
+            "resource": "UNIPROT",
+            "ids": ["P42345"]
+          }
+        ]
+      },
+      {
+        "id": "BRCA1",
+        "exp": [],
+        "mapsTo": [
+          {
+            "resource": "UNIPROT",
+            "ids": ["P38398"]
+          },
+          {
+            "resource": "ENSEMBL",
+            "ids": ["ENST00000357654", "ENSG00000012048"]
+          }
+        ]
+      },
+      {
+        "id": "ATM",
+        "exp": [],
+        "mapsTo": [
+          {
+            "resource": "UNIPROT",
+            "ids": ["Q13315"]
+          },
+          {
+            "resource": "ENSEMBL",
+            "ids": ["ENST00000278616", "ENSG00000149311"]
+          }
+        ]
+      },
+      {
+        "id": "CHEK2",
+        "exp": [],
+        "mapsTo": [
+          {
+            "resource": "UNIPROT",
+            "ids": ["O96017"]
+          }
+        ]
+      },
+      {
+        "id": "TP53",
+        "exp": [],
+        "mapsTo": [
+          {
+            "resource": "UNIPROT",
+            "ids": ["P04637"]
+          },
+          {
+            "resource": "ENSEMBL",
+            "ids": ["ENSG00000141510"]
+          }
+        ]
+      },
+      {
+        "id": "KRAS",
+        "exp": [],
+        "mapsTo": [
+          {
+            "resource": "UNIPROT",
+            "ids": ["P01116"]
+          }
+        ]
+      },
+      {
+        "id": "EGFR",
+        "exp": [],
+        "mapsTo": [
+          {
+            "resource": "UNIPROT",
+            "ids": ["P00533"]
+          },
+          {
+            "resource": "ENSEMBL",
+            "ids": ["ENSG00000146648"]
+          }
+        ]
+      }
+    ],
+    "resources": ["UNIPROT", "ENSEMBL"],
+    "expNames": [],
+    "found": 8,
+    "totalEntitiesCount": 15,
+    "resourceToMappedEntitiesCount": {
+      "UNIPROT": 8,
+      "ENSEMBL": 7
+    }
+  }
+}

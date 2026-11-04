@@ -1,0 +1,606 @@
+{
+  "_fixture": {
+    "description": "REAL saved API response used only by unit tests (not shipped data).",
+    "source": "GET /data/participants/R-HSA-69541/referenceEntities",
+    "retrievedAt": "2026-11-04T03:49:33.737Z",
+    "reactomeRelease": 98,
+    "note": "Trimmed to the fields the app reads (stId, databaseName, identifier, name, geneName, displayName, moleculeType, schemaClass, description)."
+  },
+  "data": [
+    {
+      "stId": "uniprot:Q13315",
+      "databaseName": "UniProt",
+      "identifier": "Q13315",
+      "name": ["ATM"],
+      "geneName": ["ATM"],
+      "displayName": "UniProt:Q13315 ATM",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: Serine-protein kinase ATM ecNumber evidence=\"29 32 38 61 66 80 101\"2.7.11.1 alternativeName: Ataxia telangiectasia mutated shortName: A-T mutated"
+      ]
+    },
+    {
+      "stId": "uniprot:P04637",
+      "databaseName": "UniProt",
+      "identifier": "P04637",
+      "name": ["TP53"],
+      "geneName": ["TP53", "P53"],
+      "displayName": "UniProt:P04637 TP53",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: Cellular tumor antigen p53 alternativeName: Antigen NY-CO-13 alternativeName: Phosphoprotein p53 alternativeName: Tumor suppressor p53"
+      ]
+    },
+    {
+      "stId": "chebi:30616",
+      "databaseName": "ChEBI",
+      "identifier": "30616",
+      "name": ["ATP(4-)", "ATP", "atp", "Adenosine 5'-triphosphate"],
+      "displayName": "ATP(4-) [ChEBI:30616]",
+      "moleculeType": "Chemical",
+      "schemaClass": "ReferenceMolecule"
+    },
+    {
+      "stId": "chebi:456216",
+      "databaseName": "ChEBI",
+      "identifier": "456216",
+      "name": [
+        "ADP(3-)",
+        "ADP",
+        "5&apos;-O-[(phosphonatooxy)phosphinato]adenosine",
+        "ADP trianion"
+      ],
+      "displayName": "ADP(3-) [ChEBI:456216]",
+      "moleculeType": "Chemical",
+      "schemaClass": "ReferenceMolecule"
+    },
+    {
+      "stId": "uniprot:Q00987",
+      "databaseName": "UniProt",
+      "identifier": "Q00987",
+      "name": ["MDM2"],
+      "geneName": ["MDM2"],
+      "displayName": "UniProt:Q00987 MDM2",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: E3 ubiquitin-protein ligase Mdm2 ecNumber evidence=\"15\"2.3.2.27 alternativeName: Double minute 2 protein shortName: Hdm2 alternativeName: Oncoprotein Mdm2 alternativeName: fullName evidence=\"68\"RING-type E3 ubiquitin transferase Mdm2 alternativeName: p53-binding protein Mdm2"
+      ]
+    },
+    {
+      "stId": "uniprot:O15151",
+      "databaseName": "UniProt",
+      "identifier": "O15151",
+      "name": ["MDM4"],
+      "geneName": ["MDM4", "MDMX"],
+      "displayName": "UniProt:O15151 MDM4",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: Protein Mdm4 alternativeName: Double minute 4 protein alternativeName: Mdm2-like p53-binding protein alternativeName: Protein Mdmx alternativeName: p53-binding protein Mdm4"
+      ]
+    },
+    {
+      "stId": "uniprot:P0CG48",
+      "databaseName": "UniProt",
+      "identifier": "P0CG48",
+      "name": ["UBC"],
+      "geneName": ["UBC"],
+      "displayName": "UniProt:P0CG48 UBC",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: Polyubiquitin-C component recommendedName: Ubiquitin /component"
+      ]
+    },
+    {
+      "stId": "uniprot:P0CG47",
+      "databaseName": "UniProt",
+      "identifier": "P0CG47",
+      "name": ["UBB"],
+      "geneName": ["UBB"],
+      "displayName": "UniProt:P0CG47 UBB",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: Polyubiquitin-B component recommendedName: Ubiquitin /component"
+      ]
+    },
+    {
+      "stId": "uniprot:P62987",
+      "databaseName": "UniProt",
+      "identifier": "P62987",
+      "name": ["UBA52"],
+      "geneName": ["UBA52", "UBCEP2"],
+      "displayName": "UniProt:P62987 UBA52",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: fullName evidence=\"27\"Ubiquitin-ribosomal protein eL40 fusion protein alternativeName: CEP52 alternativeName: Ubiquitin A-52 residue ribosomal protein fusion product 1 component recommendedName: Ubiquitin /component component recommendedName: fullName evidence=\"24\"Large ribosomal subunit protein eL40 alternativeName: 60S ribosomal protein L40 shortName evidence=\"25 26\"rpL40 /component"
+      ]
+    },
+    {
+      "stId": "uniprot:P62979",
+      "databaseName": "UniProt",
+      "identifier": "P62979",
+      "name": ["RPS27A"],
+      "geneName": ["RPS27A", "UBA80", "UBCEP1"],
+      "displayName": "UniProt:P62979 RPS27A",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: fullName evidence=\"24\"Ubiquitin-ribosomal protein eS31 fusion protein alternativeName: Ubiquitin carboxyl extension protein 80 component recommendedName: Ubiquitin /component component recommendedName: fullName evidence=\"23\"Small ribosomal subunit protein eS31 alternativeName: 40S ribosomal protein S27a /component"
+      ]
+    },
+    {
+      "stId": "uniprot:Q8N726",
+      "databaseName": "UniProt",
+      "identifier": "Q8N726",
+      "name": ["CDKN2A"],
+      "geneName": ["CDKN2A", "CDKN2", "MLM"],
+      "displayName": "UniProt:Q8N726 CDKN2A",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: fullName evidence=\"26\"Tumor suppressor ARF alternativeName: fullName evidence=\"25\"Alternative reading frame shortName evidence=\"25\"ARF alternativeName: fullName evidence=\"32\"Cyclin-dependent kinase inhibitor 2A alternativeName: fullName evidence=\"25\"p14ARF"
+      ]
+    },
+    {
+      "stId": "uniprot:O96017",
+      "databaseName": "UniProt",
+      "identifier": "O96017",
+      "name": ["CHEK2"],
+      "geneName": ["CHEK2", "CDS1", "CHK2", "RAD53"],
+      "displayName": "UniProt:O96017 CHEK2",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: fullName evidence=\"61\"Serine/threonine-protein kinase Chk2 ecNumber evidence=\"52\"2.7.11.1 alternativeName: CHK2 checkpoint homolog alternativeName: Cds1 homolog shortName: Hucds1 shortName: hCds1 alternativeName: Checkpoint kinase 2"
+      ]
+    },
+    {
+      "stId": "uniprot:Q8NHY2",
+      "databaseName": "UniProt",
+      "identifier": "Q8NHY2",
+      "name": ["COP1"],
+      "geneName": ["COP1", "RFWD2", "RNF200"],
+      "displayName": "UniProt:Q8NHY2 COP1",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: fullName evidence=\"21\"E3 ubiquitin-protein ligase COP1 ecNumber evidence=\"7\"2.3.2.27 alternativeName: fullName evidence=\"16\"Constitutive photomorphogenesis protein 1 homolog shortName evidence=\"16\"hCOP1 alternativeName: fullName evidence=\"21\"RING finger and WD repeat domain protein 2 alternativeName: RING finger protein 200 alternativeName: fullName evidence=\"21\"RING-type E3 ubiquitin transferase RFWD2"
+      ]
+    },
+    {
+      "stId": "uniprot:P48556",
+      "databaseName": "UniProt",
+      "identifier": "P48556",
+      "name": ["PSMD8"],
+      "geneName": ["PSMD8"],
+      "displayName": "UniProt:P48556 PSMD8",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: 26S proteasome non-ATPase regulatory subunit 8 alternativeName: 26S proteasome regulatory subunit RPN12 alternativeName: 26S proteasome regulatory subunit S14 alternativeName: p31"
+      ]
+    },
+    {
+      "stId": "uniprot:Q15008",
+      "databaseName": "UniProt",
+      "identifier": "Q15008",
+      "name": ["PSMD6"],
+      "geneName": ["PSMD6", "KIAA0107", "PFAAP4"],
+      "displayName": "UniProt:Q15008 PSMD6",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: 26S proteasome non-ATPase regulatory subunit 6 alternativeName: 26S proteasome regulatory subunit RPN7 alternativeName: 26S proteasome regulatory subunit S10 alternativeName: Breast cancer-associated protein SGA-113M alternativeName: Phosphonoformate immuno-associated protein 4 alternativeName: Proteasome regulatory particle subunit p44S10 alternativeName: p42A"
+      ]
+    },
+    {
+      "stId": "uniprot:P60896",
+      "databaseName": "UniProt",
+      "identifier": "P60896",
+      "name": ["SEM1"],
+      "geneName": ["SEM1", "C7orf76", "DSS1", "SHFDG1", "SHFM1"],
+      "displayName": "UniProt:P60896 SEM1",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: 26S proteasome complex subunit SEM1 alternativeName: 26S proteasome complex subunit DSS1 alternativeName: Deleted in split hand/split foot protein 1 alternativeName: Split hand/foot deleted protein 1 alternativeName: Split hand/foot malformation type 1 protein"
+      ]
+    },
+    {
+      "stId": "uniprot:O43242",
+      "databaseName": "UniProt",
+      "identifier": "O43242",
+      "name": ["PSMD3"],
+      "geneName": ["PSMD3"],
+      "displayName": "UniProt:O43242 PSMD3",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: 26S proteasome non-ATPase regulatory subunit 3 alternativeName: 26S proteasome regulatory subunit RPN3 alternativeName: 26S proteasome regulatory subunit S3 alternativeName: Proteasome subunit p58"
+      ]
+    },
+    {
+      "stId": "uniprot:O00231",
+      "databaseName": "UniProt",
+      "identifier": "O00231",
+      "name": ["PSMD11"],
+      "geneName": ["PSMD11"],
+      "displayName": "UniProt:O00231 PSMD11",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: 26S proteasome non-ATPase regulatory subunit 11 alternativeName: 26S proteasome regulatory subunit RPN6 alternativeName: 26S proteasome regulatory subunit S9 alternativeName: 26S proteasome regulatory subunit p44.5"
+      ]
+    },
+    {
+      "stId": "uniprot:O00487",
+      "databaseName": "UniProt",
+      "identifier": "O00487",
+      "name": ["PSMD14"],
+      "geneName": ["PSMD14", "POH1"],
+      "displayName": "UniProt:O00487 PSMD14",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: Ubiquitin C-terminal hydrolase PSMD14 ecNumber evidence=\"5 8\"3.4.19.12 alternativeName: 26S proteasome non-ATPase regulatory subunit 14 alternativeName: 26S proteasome regulatory subunit RPN11 alternativeName: 26S proteasome-associated PAD1 homolog 1"
+      ]
+    },
+    {
+      "stId": "uniprot:P51665",
+      "databaseName": "UniProt",
+      "identifier": "P51665",
+      "name": ["PSMD7"],
+      "geneName": ["PSMD7", "MOV34L"],
+      "displayName": "UniProt:P51665 PSMD7",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: 26S proteasome non-ATPase regulatory subunit 7 alternativeName: 26S proteasome regulatory subunit RPN8 alternativeName: 26S proteasome regulatory subunit S12 alternativeName: Mov34 protein homolog alternativeName: Proteasome subunit p40"
+      ]
+    },
+    {
+      "stId": "uniprot:O00232",
+      "databaseName": "UniProt",
+      "identifier": "O00232",
+      "name": ["PSMD12"],
+      "geneName": ["PSMD12"],
+      "displayName": "UniProt:O00232 PSMD12",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: 26S proteasome non-ATPase regulatory subunit 12 alternativeName: 26S proteasome regulatory subunit RPN5 alternativeName: 26S proteasome regulatory subunit p55"
+      ]
+    },
+    {
+      "stId": "uniprot:Q9UNM6",
+      "databaseName": "UniProt",
+      "identifier": "Q9UNM6",
+      "name": ["PSMD13"],
+      "geneName": ["PSMD13"],
+      "displayName": "UniProt:Q9UNM6 PSMD13",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: 26S proteasome non-ATPase regulatory subunit 13 alternativeName: 26S proteasome regulatory subunit RPN9 alternativeName: 26S proteasome regulatory subunit S11 alternativeName: 26S proteasome regulatory subunit p40.5"
+      ]
+    },
+    {
+      "stId": "uniprot:Q99460",
+      "databaseName": "UniProt",
+      "identifier": "Q99460",
+      "name": ["PSMD1"],
+      "geneName": ["PSMD1"],
+      "displayName": "UniProt:Q99460 PSMD1",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: 26S proteasome non-ATPase regulatory subunit 1 alternativeName: 26S proteasome regulatory subunit RPN2 alternativeName: 26S proteasome regulatory subunit S1 alternativeName: 26S proteasome subunit p112"
+      ]
+    },
+    {
+      "stId": "uniprot:Q16186",
+      "databaseName": "UniProt",
+      "identifier": "Q16186",
+      "name": ["ADRM1"],
+      "geneName": ["ADRM1", "GP110"],
+      "displayName": "UniProt:Q16186 ADRM1",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: Proteasomal ubiquitin receptor ADRM1 alternativeName: 110 kDa cell membrane glycoprotein shortName: Gp110 alternativeName: Adhesion-regulating molecule 1 shortName: ARM-1 alternativeName: Proteasome regulatory particle non-ATPase 13 shortName: hRpn13 alternativeName: Rpn13 homolog"
+      ]
+    },
+    {
+      "stId": "uniprot:P17980",
+      "databaseName": "UniProt",
+      "identifier": "P17980",
+      "name": ["PSMC3"],
+      "geneName": ["PSMC3", "TBP1"],
+      "displayName": "UniProt:P17980 PSMC3",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: 26S proteasome regulatory subunit 6A alternativeName: 26S proteasome AAA-ATPase subunit RPT5 alternativeName: Proteasome 26S subunit ATPase 3 alternativeName: Proteasome subunit P50 alternativeName: Tat-binding protein 1 shortName: TBP-1"
+      ]
+    },
+    {
+      "stId": "uniprot:P62333",
+      "databaseName": "UniProt",
+      "identifier": "P62333",
+      "name": ["PSMC6"],
+      "geneName": ["PSMC6", "SUG2"],
+      "displayName": "UniProt:P62333 PSMC6",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: 26S proteasome regulatory subunit 10B alternativeName: 26S proteasome AAA-ATPase subunit RPT4 alternativeName: Proteasome 26S subunit ATPase 6 alternativeName: Proteasome subunit p42"
+      ]
+    },
+    {
+      "stId": "uniprot:P43686",
+      "databaseName": "UniProt",
+      "identifier": "P43686",
+      "name": ["PSMC4"],
+      "geneName": ["PSMC4", "MIP224", "TBP7"],
+      "displayName": "UniProt:P43686 PSMC4",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: 26S proteasome regulatory subunit 6B alternativeName: 26S proteasome AAA-ATPase subunit RPT3 alternativeName: MB67-interacting protein alternativeName: MIP224 alternativeName: Proteasome 26S subunit ATPase 4 alternativeName: Tat-binding protein 7 shortName: TBP-7"
+      ]
+    },
+    {
+      "stId": "uniprot:P62195",
+      "databaseName": "UniProt",
+      "identifier": "P62195",
+      "name": ["PSMC5"],
+      "geneName": ["PSMC5", "SUG1"],
+      "displayName": "UniProt:P62195 PSMC5",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: 26S proteasome regulatory subunit 8 alternativeName: 26S proteasome AAA-ATPase subunit RPT6 alternativeName: Proteasome 26S subunit ATPase 5 alternativeName: Proteasome subunit p45 alternativeName: Thyroid hormone receptor-interacting protein 1 shortName: TRIP1 alternativeName: p45/SUG"
+      ]
+    },
+    {
+      "stId": "uniprot:P62191",
+      "databaseName": "UniProt",
+      "identifier": "P62191",
+      "name": ["PSMC1"],
+      "geneName": ["PSMC1"],
+      "displayName": "UniProt:P62191 PSMC1",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: 26S proteasome regulatory subunit 4 shortName: P26s4 alternativeName: 26S proteasome AAA-ATPase subunit RPT2 alternativeName: Proteasome 26S subunit ATPase 1"
+      ]
+    },
+    {
+      "stId": "uniprot:P35998",
+      "databaseName": "UniProt",
+      "identifier": "P35998",
+      "name": ["PSMC2"],
+      "geneName": ["PSMC2", "MSS1"],
+      "displayName": "UniProt:P35998 PSMC2",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: 26S proteasome regulatory subunit 7 alternativeName: 26S proteasome AAA-ATPase subunit RPT1 alternativeName: Proteasome 26S subunit ATPase 2"
+      ]
+    },
+    {
+      "stId": "uniprot:Q13200",
+      "databaseName": "UniProt",
+      "identifier": "Q13200",
+      "name": ["PSMD2"],
+      "geneName": ["PSMD2", "TRAP2"],
+      "displayName": "UniProt:Q13200 PSMD2",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: 26S proteasome non-ATPase regulatory subunit 2 alternativeName: 26S proteasome regulatory subunit RPN1 alternativeName: 26S proteasome regulatory subunit S2 alternativeName: 26S proteasome subunit p97 alternativeName: Protein 55.11 alternativeName: Tumor necrosis factor type 1 receptor-associated protein 2"
+      ]
+    },
+    {
+      "stId": "uniprot:O14818",
+      "databaseName": "UniProt",
+      "identifier": "O14818",
+      "name": ["PSMA7"],
+      "geneName": ["PSMA7", "HSPC"],
+      "displayName": "UniProt:O14818 PSMA7",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: fullName evidence=\"31\"Proteasome subunit alpha type-7 alternativeName: Proteasome subunit RC6-1 alternativeName: Proteasome subunit XAPC7 alternativeName: fullName evidence=\"30\"Proteasome subunit alpha-4 shortName evidence=\"30\"alpha-4"
+      ]
+    },
+    {
+      "stId": "uniprot:P25786",
+      "databaseName": "UniProt",
+      "identifier": "P25786",
+      "name": ["PSMA1"],
+      "geneName": ["PSMA1", "HC2", "NU", "PROS30", "PSC2"],
+      "displayName": "UniProt:P25786 PSMA1",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: fullName evidence=\"24\"Proteasome subunit alpha type-1 alternativeName: 30 kDa prosomal protein shortName: PROS-30 alternativeName: Macropain subunit C2 alternativeName: Multicatalytic endopeptidase complex subunit C2 alternativeName: Proteasome component C2 alternativeName: Proteasome nu chain alternativeName: fullName evidence=\"23\"Proteasome subunit alpha-6 shortName evidence=\"23\"alpha-6"
+      ]
+    },
+    {
+      "stId": "uniprot:P25787",
+      "databaseName": "UniProt",
+      "identifier": "P25787",
+      "name": ["PSMA2"],
+      "geneName": ["PSMA2", "HC3", "PSC3"],
+      "displayName": "UniProt:P25787 PSMA2",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: Proteasome subunit alpha type-2 alternativeName: Macropain subunit C3 alternativeName: Multicatalytic endopeptidase complex subunit C3 alternativeName: Proteasome component C3 alternativeName: fullName evidence=\"17\"Proteasome subunit alpha-2 shortName evidence=\"17\"alpha-2"
+      ]
+    },
+    {
+      "stId": "uniprot:P25788",
+      "databaseName": "UniProt",
+      "identifier": "P25788",
+      "name": ["PSMA3"],
+      "geneName": ["PSMA3", "HC8", "PSC8"],
+      "displayName": "UniProt:P25788 PSMA3",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: fullName evidence=\"28\"Proteasome subunit alpha type-3 alternativeName: Macropain subunit C8 alternativeName: Multicatalytic endopeptidase complex subunit C8 alternativeName: Proteasome component C8 alternativeName: fullName evidence=\"26\"Proteasome subunit alpha-7 shortName evidence=\"26\"alpha-7"
+      ]
+    },
+    {
+      "stId": "uniprot:P25789",
+      "databaseName": "UniProt",
+      "identifier": "P25789",
+      "name": ["PSMA4"],
+      "geneName": ["PSMA4", "HC9", "PSC9"],
+      "displayName": "UniProt:P25789 PSMA4",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: fullName evidence=\"18\"Proteasome subunit alpha type-4 alternativeName: Macropain subunit C9 alternativeName: Multicatalytic endopeptidase complex subunit C9 alternativeName: Proteasome component C9 alternativeName: Proteasome subunit L alternativeName: fullName evidence=\"17\"Proteasome subunit alpha-3 shortName evidence=\"17\"alpha-3"
+      ]
+    },
+    {
+      "stId": "uniprot:P28066",
+      "databaseName": "UniProt",
+      "identifier": "P28066",
+      "name": ["PSMA5"],
+      "geneName": ["PSMA5"],
+      "displayName": "UniProt:P28066 PSMA5",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: fullName evidence=\"19\"Proteasome subunit alpha type-5 alternativeName: Macropain zeta chain alternativeName: Multicatalytic endopeptidase complex zeta chain alternativeName: fullName evidence=\"18\"Proteasome subunit alpha-5 shortName evidence=\"18\"alpha-5 alternativeName: Proteasome zeta chain"
+      ]
+    },
+    {
+      "stId": "uniprot:P60900",
+      "databaseName": "UniProt",
+      "identifier": "P60900",
+      "name": ["PSMA6"],
+      "geneName": ["PSMA6", "PROS27"],
+      "displayName": "UniProt:P60900 PSMA6",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: fullName evidence=\"17\"Proteasome subunit alpha type-6 alternativeName: 27 kDa prosomal protein shortName: PROS-27 shortName: p27K alternativeName: Macropain iota chain alternativeName: Multicatalytic endopeptidase complex iota chain alternativeName: Proteasome iota chain alternativeName: fullName evidence=\"16\"Proteasome subunit alpha-1 shortName evidence=\"16\"alpha-1"
+      ]
+    },
+    {
+      "stId": "uniprot:P28074",
+      "databaseName": "UniProt",
+      "identifier": "P28074",
+      "name": ["PSMB5"],
+      "geneName": ["PSMB5", "LMPX", "MB1", "X"],
+      "displayName": "UniProt:P28074 PSMB5",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: fullName evidence=\"28\"Proteasome subunit beta type-5 ecNumber evidence=\"15\"3.4.25.1 alternativeName: Macropain epsilon chain alternativeName: Multicatalytic endopeptidase complex epsilon chain alternativeName: Proteasome chain 6 alternativeName: Proteasome epsilon chain alternativeName: Proteasome subunit MB1 alternativeName: Proteasome subunit X alternativeName: fullName evidence=\"26\"Proteasome subunit beta-5 shortName evidence=\"26\"beta-5"
+      ]
+    },
+    {
+      "stId": "uniprot:P20618",
+      "databaseName": "UniProt",
+      "identifier": "P20618",
+      "name": ["PSMB1"],
+      "geneName": ["PSMB1", "PSC5"],
+      "displayName": "UniProt:P20618 PSMB1",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: fullName evidence=\"20\"Proteasome subunit beta type-1 alternativeName: Macropain subunit C5 alternativeName: Multicatalytic endopeptidase complex subunit C5 alternativeName: Proteasome component C5 alternativeName: Proteasome gamma chain alternativeName: fullName evidence=\"19\"Proteasome subunit beta-6 shortName evidence=\"19\"beta-6"
+      ]
+    },
+    {
+      "stId": "uniprot:P28072",
+      "databaseName": "UniProt",
+      "identifier": "P28072",
+      "name": ["PSMB6"],
+      "geneName": ["PSMB6", "LMPY", "Y"],
+      "displayName": "UniProt:P28072 PSMB6",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: fullName evidence=\"20\"Proteasome subunit beta type-6 ecNumber evidence=\"10\"3.4.25.1 alternativeName: Macropain delta chain alternativeName: Multicatalytic endopeptidase complex delta chain alternativeName: Proteasome delta chain alternativeName: Proteasome subunit Y alternativeName: fullName evidence=\"19\"Proteasome subunit beta-1 shortName evidence=\"19\"beta-1"
+      ]
+    },
+    {
+      "stId": "uniprot:Q99436",
+      "databaseName": "UniProt",
+      "identifier": "Q99436",
+      "name": ["PSMB7"],
+      "geneName": ["PSMB7", "Z"],
+      "displayName": "UniProt:Q99436 PSMB7",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: fullName evidence=\"17\"Proteasome subunit beta type-7 ecNumber evidence=\"9\"3.4.25.1 alternativeName: Macropain chain Z alternativeName: Multicatalytic endopeptidase complex chain Z alternativeName: Proteasome subunit Z alternativeName: fullName evidence=\"16\"Proteasome subunit beta-2 shortName evidence=\"16\"beta-2"
+      ]
+    },
+    {
+      "stId": "uniprot:P49721",
+      "databaseName": "UniProt",
+      "identifier": "P49721",
+      "name": ["PSMB2"],
+      "geneName": ["PSMB2"],
+      "displayName": "UniProt:P49721 PSMB2",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: fullName evidence=\"16\"Proteasome subunit beta type-2 alternativeName: Macropain subunit C7-I alternativeName: Multicatalytic endopeptidase complex subunit C7-I alternativeName: Proteasome component C7-I alternativeName: fullName evidence=\"15\"Proteasome subunit beta-4 shortName evidence=\"15\"beta-4"
+      ]
+    },
+    {
+      "stId": "uniprot:P49720",
+      "databaseName": "UniProt",
+      "identifier": "P49720",
+      "name": ["PSMB3"],
+      "geneName": ["PSMB3"],
+      "displayName": "UniProt:P49720 PSMB3",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: fullName evidence=\"17\"Proteasome subunit beta type-3 alternativeName: Proteasome chain 13 alternativeName: Proteasome component C10-II alternativeName: fullName evidence=\"16\"Proteasome subunit beta-3 shortName evidence=\"16\"beta-3 alternativeName: Proteasome theta chain"
+      ]
+    },
+    {
+      "stId": "uniprot:P28070",
+      "databaseName": "UniProt",
+      "identifier": "P28070",
+      "name": ["PSMB4"],
+      "geneName": ["PSMB4", "PROS26"],
+      "displayName": "UniProt:P28070 PSMB4",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: fullName evidence=\"28\"Proteasome subunit beta type-4 alternativeName: 26 kDa prosomal protein shortName: HsBPROS26 shortName: PROS-26 alternativeName: Macropain beta chain alternativeName: Multicatalytic endopeptidase complex beta chain alternativeName: Proteasome beta chain alternativeName: Proteasome chain 3 shortName: HsN3 alternativeName: fullName evidence=\"27\"Proteasome subunit beta-7 shortName evidence=\"27\"beta-7"
+      ]
+    },
+    {
+      "stId": "uniprot:Q9BVI0",
+      "databaseName": "UniProt",
+      "identifier": "Q9BVI0",
+      "name": ["PHF20"],
+      "geneName": ["PHF20", "C20orf104", "GLEA2", "HCA58", "NZF", "TZP"],
+      "displayName": "UniProt:Q9BVI0 PHF20",
+      "moleculeType": "Protein",
+      "schemaClass": "ReferenceGeneProduct",
+      "description": [
+        "recommendedName: PHD finger protein 20 alternativeName: Glioma-expressed antigen 2 alternativeName: Hepatocellular carcinoma-associated antigen 58 alternativeName: Novel zinc finger protein alternativeName: Transcription factor TZP"
+      ]
+    }
+  ]
+}

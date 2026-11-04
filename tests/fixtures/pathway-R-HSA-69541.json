@@ -1,0 +1,177 @@
+{
+  "_fixture": {
+    "description": "REAL saved API response used only by unit tests (not shipped data).",
+    "source": "GET /data/query/R-HSA-69541",
+    "retrievedAt": "2026-11-04T03:49:33.737Z",
+    "reactomeRelease": 98,
+    "note": "Unmodified except crossReference, orthologousEvent, figure and hasEvent[*] long fields trimmed to keep file small."
+  },
+  "data": {
+    "dbId": 69541,
+    "displayName": "Stabilization of p53",
+    "stId": "R-HSA-69541",
+    "stIdVersion": "R-HSA-69541.7",
+    "isInDisease": false,
+    "isInferred": false,
+    "maxDepth": 3,
+    "name": ["Stabilization of p53"],
+    "releaseDate": "2004-07-06",
+    "speciesName": "Homo sapiens",
+    "literatureReference": [
+      {
+        "dbId": 69492,
+        "displayName": "ATM-dependent phosphorylation of Mdm2 on serine 395: role in p53 activation by DNA damage.",
+        "title": "ATM-dependent phosphorylation of Mdm2 on serine 395: role in p53 activation by DNA damage.",
+        "journal": "Genes Dev",
+        "pages": "1067-77",
+        "pubMedIdentifier": 11331603,
+        "volume": 15,
+        "year": 2001,
+        "url": "http://www.ncbi.nlm.nih.gov/pubmed/11331603",
+        "className": "LiteratureReference",
+        "schemaClass": "LiteratureReference"
+      },
+      {
+        "dbId": 69543,
+        "displayName": "Chk2/hCds1 functions as a DNA damage checkpoint in G(1) by stabilizing p53.",
+        "title": "Chk2/hCds1 functions as a DNA damage checkpoint in G(1) by stabilizing p53.",
+        "journal": "Genes Dev",
+        "pages": "278-88",
+        "pubMedIdentifier": 10673500,
+        "volume": 14,
+        "year": 2000,
+        "url": "http://www.ncbi.nlm.nih.gov/pubmed/10673500",
+        "className": "LiteratureReference",
+        "schemaClass": "LiteratureReference"
+      },
+      {
+        "dbId": 69548,
+        "displayName": "The human homologs of checkpoint kinases Chk1 and Cds1 (Chk2) phosphorylate p53 at multiple DNA damage-inducible sites.",
+        "title": "The human homologs of checkpoint kinases Chk1 and Cds1 (Chk2) phosphorylate p53 at multiple DNA damage-inducible sites.",
+        "journal": "Genes Dev",
+        "pages": "289-300",
+        "pubMedIdentifier": 10673501,
+        "volume": 14,
+        "year": 2000,
+        "url": "http://www.ncbi.nlm.nih.gov/pubmed/10673501",
+        "className": "LiteratureReference",
+        "schemaClass": "LiteratureReference"
+      },
+      {
+        "dbId": 69550,
+        "displayName": "DNA damage-induced activation of p53 by the checkpoint kinase Chk2.",
+        "title": "DNA damage-induced activation of p53 by the checkpoint kinase Chk2.",
+        "journal": "Science",
+        "pages": "1824-7",
+        "pubMedIdentifier": 10710310,
+        "volume": 287,
+        "year": 2000,
+        "url": "http://www.ncbi.nlm.nih.gov/pubmed/10710310",
+        "className": "LiteratureReference",
+        "schemaClass": "LiteratureReference"
+      }
+    ],
+    "species": [
+      {
+        "dbId": 48887,
+        "displayName": "Homo sapiens",
+        "name": ["Homo sapiens", "H. sapiens", "Hs", "human", "man"],
+        "taxId": "9606",
+        "abbreviation": "HSA",
+        "className": "Species",
+        "schemaClass": "Species"
+      }
+    ],
+    "summation": [
+      {
+        "dbId": 69559,
+        "displayName": "Later studies pin-pointed that a single serine (Ser-15) was ...",
+        "text": "Later studies pin-pointed that a single serine (Ser-15) was phosphorylated by ATM and phosphorylation of Ser-15 was rapidly-induced in IR-treated cells and this response was ATM-dependent (Canman et al, 1998; Banin et al, 1998 and Khanna et al, 1998).  ATM also regulates the phosphorylation of p53 at other sites, especially Ser-20, by activating other serine/threonine kinases in response to IR (Chehab et al, 2000; Shieh et al, 2000; Hirao et al 2000). Phosphorylation of p53 at Ser-20 interferes with p53-MDM2 interaction.  MDM2 is transcriptionally activated by p53 and is a negative regulator of p53 that targets it for degradation (Haupt et al, 1997; Kubbutat et al, 1997).  In addition modification of MDM2 by ATM also affects p53 stabilization (Maya et al, 2001).  ",
+        "className": "Summation",
+        "schemaClass": "Summation"
+      }
+    ],
+    "reviewStatus": {
+      "dbId": 9821382,
+      "displayName": "five stars",
+      "definition": "externally reviewed",
+      "name": ["five stars"],
+      "className": "ReviewStatus",
+      "schemaClass": "ReviewStatus"
+    },
+    "hasDiagram": false,
+    "hasEHLD": false,
+    "lastUpdatedDate": "2017-04-20",
+    "hasEvent": [
+      {
+        "dbId": 5693609,
+        "stId": "R-HSA-5693609",
+        "displayName": "ATM phosphorylates TP53 at S15",
+        "schemaClass": "Reaction"
+      },
+      {
+        "dbId": 69685,
+        "stId": "R-HSA-69685",
+        "displayName": "CHEK2 phosphorylates TP53",
+        "schemaClass": "Reaction"
+      },
+      {
+        "dbId": 6804955,
+        "stId": "R-HSA-6804955",
+        "displayName": "ATM phosphorylates MDM2",
+        "schemaClass": "Reaction"
+      },
+      {
+        "dbId": 349455,
+        "stId": "R-HSA-349455",
+        "displayName": "Phosphorylation of MDM4 by ATM",
+        "schemaClass": "Reaction"
+      },
+      {
+        "dbId": 349426,
+        "stId": "R-HSA-349426",
+        "displayName": "Phosphorylation of MDM4 by CHEK2",
+        "schemaClass": "Reaction"
+      },
+      {
+        "dbId": 6804741,
+        "stId": "R-HSA-6804741",
+        "displayName": "MDM2 forms homo- or heterodimers",
+        "schemaClass": "Reaction"
+      },
+      {
+        "dbId": 6804724,
+        "stId": "R-HSA-6804724",
+        "displayName": "MDM2 ubiquitinates phosphorylated MDM4",
+        "schemaClass": "Reaction"
+      },
+      {
+        "dbId": 5633460,
+        "stId": "R-HSA-5633460",
+        "displayName": "MDM2 binds TP53",
+        "schemaClass": "Reaction"
+      },
+      {
+        "dbId": 6804879,
+        "stId": "R-HSA-6804879",
+        "displayName": "MDM2 ubiquitinates TP53",
+        "schemaClass": "Reaction"
+      },
+      {
+        "dbId": 6793685,
+        "stId": "R-HSA-6793685",
+        "displayName": "Ubiquitinated TP53 translocates to the cytosol",
+        "schemaClass": "Reaction"
+      },
+      {
+        "dbId": 349425,
+        "stId": "R-HSA-349425",
+        "displayName": "Autodegradation of the E3 ubiquitin ligase COP1",
+        "schemaClass": "Pathway",
+        "hasDiagram": false
+      }
+    ],
+    "schemaClass": "Pathway",
+    "className": "Pathway"
+  }
+}

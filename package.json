@@ -1,0 +1,53 @@
+{
+  "name": "pathwayscope",
+  "version": "0.1.0",
+  "description": "Interactive pathway explorer and enrichment analysis built on the Reactome knowledgebase.",
+  "private": true,
+  "type": "module",
+  "main": "electron/main.js",
+  "homepage": "https://github.com/reeper316099/PathwayScope",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reeper316099/PathwayScope.git"
+  },
+  "bugs": {
+    "url": "https://github.com/reeper316099/PathwayScope/issues"
+  },
+  "author": {
+    "name": "reeper316099",
+    "email": "coding31609@gmail.com"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "dev:electron": "node scripts/dev-electron.mjs",
+    "dev:electron:bg": "node scripts/dev-electron.mjs --background",
+    "build:web": "vite build --mode web",
+    "build:electron": "vite build --mode electron",
+    "start:electron": "npm run build:electron && electron .",
+    "dist": "npm run build:electron && electron-builder",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@playwright/test": "1.64.1",
+    "@vitest/coverage-v8": "5.1.0",
+    "chart.js": "4.6.1",
+    "cytoscape": "3.34.4",
+    "dompurify": "3.4.17",
+    "electron": "45.2.2",
+    "electron-builder": "26.18.0",
+    "eslint": "10.14.0",
+    "globals": "17.14.0",
+    "prettier": "3.9.10",
+    "vite": "8.3.5",
+    "vitest": "5.1.0"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "_fixture": {
+    "description": "REAL saved API response used only by unit tests (not shipped data).",
+    "source": "GET /interactors/static/molecule/P38398/summary",
+    "retrievedAt": "2026-11-04T03:49:33.737Z",
+    "reactomeRelease": 98,
+    "note": "Unmodified. count = total interactors (the details endpoint count is only the page size)."
+  },
+  "data": {
+    "resource": "static",
+    "entities": [
+      {
+        "acc": "P38398",
+        "count": 49
+      }
+    ]
+  }
+}

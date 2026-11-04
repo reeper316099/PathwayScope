@@ -1,0 +1,30 @@
+# electron-builder config. Installers are UNSIGNED (see README). Verified only after a real CI run.
+appId: com.reeper316099.pathwayscope
+productName: PathwayScope
+copyright: Copyright © 2026 reeper316099
+directories:
+  output: release
+  buildResources: build
+files:
+  - dist/**
+  - electron/**
+  - package.json
+artifactName: ${productName}-${version}-${os}-${arch}.${ext}
+asar: true
+publish:
+  provider: github
+  owner: reeper316099
+  repo: PathwayScope
+win:
+  target: [nsis, portable]
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+mac:
+  category: public.app-category.education
+  target:
+    - { target: dmg, arch: [arm64, x64] }
+linux:
+  category: Education
+  maintainer: reeper316099 <coding31609@gmail.com>
+  target: [AppImage, deb]

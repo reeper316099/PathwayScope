@@ -1,0 +1,15 @@
+{
+  "_fixture": {
+    "description": "REAL saved API response used only by unit tests (not shipped data).",
+    "source": "GET /AnalysisService/token/{token}/notFound",
+    "retrievedAt": "2026-11-04T03:49:33.737Z",
+    "reactomeRelease": 98,
+    "note": "Unmodified."
+  },
+  "data": [
+    {
+      "id": "NOTAGENE",
+      "exp": []
+    }
+  ]
+}
