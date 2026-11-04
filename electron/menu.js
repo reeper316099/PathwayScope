@@ -36,6 +36,7 @@ export function buildMenu({
         item('Gene Explorer', 'CmdOrCtrl+1', 'mode:explorer'),
         item('Enrichment Analysis', 'CmdOrCtrl+2', 'mode:enrichment'),
         item('Pathway Browser', 'CmdOrCtrl+3', 'mode:browser'),
+        item('Settings', 'CmdOrCtrl+4', 'mode:settings'),
       ],
     },
     {

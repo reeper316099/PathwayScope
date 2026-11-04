@@ -14,7 +14,7 @@ test('launches with the right title, size limits and an empty three-mode shell',
     await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows()[0].getMinimumSize()),
   ).toEqual([1000, 700]);
   expect(await app.evaluate(({ BrowserWindow }) => BrowserWindow.getAllWindows().length)).toBe(1);
-  for (const mode of ['explorer', 'enrichment', 'browser']) {
+  for (const mode of ['explorer', 'enrichment', 'browser', 'settings']) {
     await win.click(`a[data-mode=${mode}]`);
     await expect(win.locator(`[data-view=${mode}]`)).toBeVisible();
   }
@@ -337,6 +337,7 @@ test('native menu: shortcuts target the right modes, About lists the version, Cl
     'Gene Explorer': 'CmdOrCtrl+1',
     'Enrichment Analysis': 'CmdOrCtrl+2',
     'Pathway Browser': 'CmdOrCtrl+3',
+    Settings: 'CmdOrCtrl+4',
   });
   await click('Pathway Browser');
   await expect(win.locator('[data-view=browser]')).toBeVisible();

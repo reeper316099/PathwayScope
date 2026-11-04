@@ -1,18 +1,18 @@
 // App bootstrap: hash router for the three modes, shared pathway detail drawer, menu/shortcut actions, offline banner.
 import { cache, isElectron, onRequestMeta } from './core/http.js';
 import { getDatabaseInfo } from './core/reactomeContent.js';
-import { createDataManager } from './ui/dataManager.js';
 import { createEnrichmentView } from './ui/enrichmentView.js';
 import { createGeneExplorer } from './ui/geneExplorer.js';
 import { createBrowserView } from './ui/browserView.js';
 import { cacheLabel, setBanner, toast } from './ui/cards.js';
 import { mountHistory } from './ui/history.js';
 import { createPathwayDetail } from './ui/pathwayDetail.js';
+import { createSettingsView } from './ui/settingsView.js';
 import { mountGlobalSearch } from './ui/search.js';
 import { getSelected, onSelection, select } from './ui/selection.js';
 import { initTheme, toggleTheme } from './ui/theme.js';
 
-const MODES = ['explorer', 'enrichment', 'browser'];
+const MODES = ['explorer', 'enrichment', 'browser', 'settings'];
 const $ = (id) => document.getElementById(id);
 const views = {};
 let mode = 'explorer';
@@ -41,7 +41,22 @@ const ctx = {
   },
   navigateGene: (symbol) => go('explorer', symbol),
   currentPathway: () => getSelected('pathway'),
+  openDialog: (id) => $(id).showModal(),
 };
+
+// Lets a click on the dark area OUTSIDE a pop-up dialog close it (Esc already does).
+function closeOnOutsideClick(dialog) {
+  dialog.addEventListener('click', (event) => {
+    if (event.target !== dialog) return;
+    const box = dialog.getBoundingClientRect();
+    const inside =
+      event.clientX >= box.left &&
+      event.clientX <= box.right &&
+      event.clientY >= box.top &&
+      event.clientY <= box.bottom;
+    if (!inside) dialog.close();
+  });
+}
 
 // Creates a view the first time its mode is shown.
 function ensureView(name) {
@@ -51,6 +66,7 @@ function ensureView(name) {
     explorer: createGeneExplorer,
     enrichment: createEnrichmentView,
     browser: createBrowserView,
+    settings: createSettingsView,
   }[name](root, ctx);
   return views[name];
 }
@@ -110,7 +126,7 @@ async function handleAction({ action, payload }) {
   else if (action === 'toggleTheme') toggleTheme();
   else if (action === 'about') $('about-dialog').showModal();
   else if (action === 'dataSources') $('sources-dialog').showModal();
-  else if (action === 'manageData') dataManager.open();
+  else if (action === 'manageData') go('settings');
   else if (action === 'cacheCleared') {
     cache.clear();
     toast(`Cache cleared (${payload?.removed ?? 0} saved responses removed).`);
@@ -132,6 +148,7 @@ function bindBrowserShortcuts() {
     1: 'mode:explorer',
     2: 'mode:enrichment',
     3: 'mode:browser',
+    4: 'mode:settings',
   };
   window.addEventListener('keydown', (event) => {
     const action =
@@ -179,15 +196,14 @@ function bindBanner() {
 }
 
 let search;
-let dataManager;
 // Starts everything once the DOM is ready.
 async function boot() {
   initTheme();
   bindBanner();
   $('theme-toggle').addEventListener('click', toggleTheme);
   $('about-btn').addEventListener('click', () => handleAction({ action: 'about' }));
-  dataManager = createDataManager($('data-dialog'));
-  $('data-btn').addEventListener('click', () => dataManager.open());
+  $('data-btn').addEventListener('click', () => go('settings'));
+  for (const id of ['about-dialog', 'sources-dialog']) closeOnOutsideClick($(id));
   $('drawer-close').addEventListener('click', closeDrawer);
   document.addEventListener(
     'keydown',

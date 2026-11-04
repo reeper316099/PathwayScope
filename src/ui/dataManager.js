@@ -40,12 +40,12 @@ const cacheSource = {
 const xButton = (label, onclick) =>
   h('button', { class: 'icon-x', type: 'button', 'aria-label': label, onclick }, '✕');
 
-// Creates the dialog controller. `dialog` is the <dialog> element; returns { open }.
-export function createDataManager(dialog) {
+// Creates the stored-data manager inside `container` (the Settings view). Returns { refresh }.
+export function createDataManager(container) {
   let filter = '';
   let confirming = false;
 
-  // Runs a delete action, tells the rest of the app, shows a toast and redraws the dialog.
+  // Runs a delete action, tells the rest of the app, shows a toast and redraws the section.
   async function act(action, message) {
     await action();
     emit('history-changed');
@@ -179,7 +179,7 @@ export function createDataManager(dialog) {
       value: filter,
       oninput: debounce((e) => {
         filter = e.target.value;
-        render().then(() => dialog.querySelector('input[type=search]')?.focus());
+        render().then(() => container.querySelector('input[type=search]')?.focus());
       }, 200),
     });
     return h(
@@ -291,13 +291,13 @@ export function createDataManager(dialog) {
     );
   }
 
-  // Fetches the cache list and redraws the whole dialog.
+  // Fetches the cache list and redraws the whole section.
   async function render() {
     let cached = { entries: [], totalBytes: 0, folder: null };
     try {
       cached = await cacheSource.list();
     } catch {
-      // The dialog still works for history and sessions.
+      // The section still works for history and sessions.
     }
     const where = isElectron()
       ? [
@@ -309,8 +309,7 @@ export function createDataManager(dialog) {
         ]
       : "Stored in this browser's local storage for this site (large cached items are kept in memory only until you reload).";
     setChildren(
-      dialog,
-      h('h2', { id: 'data-title' }, 'Manage stored data'),
+      container,
       h(
         'p',
         { class: 'note' },
@@ -321,16 +320,15 @@ export function createDataManager(dialog) {
       sessionsSection(),
       cacheSection(cached),
       dangerSection(),
-      h('form', { method: 'dialog' }, h('button', { class: 'btn' }, 'Close')),
     );
   }
 
   return {
-    // Opens the dialog with fresh data.
-    open() {
+    // Redraws the section with fresh data (called whenever the Settings view is shown).
+    refresh() {
       confirming = false;
       filter = '';
-      render().then(() => !dialog.open && dialog.showModal());
+      return render();
     },
   };
 }

@@ -35,9 +35,9 @@ test('screenshots: Electron window (light and dark) for each mode', async () => 
   await win.screenshot({ path: 'docs/screenshots/electron-browser-dark.png' });
   await win.click('#theme-toggle');
   await clickMenu(app, 'Manage Stored Data…');
-  await expect(win.locator('#data-dialog table.data')).toBeVisible();
+  await expect(win.locator('#data-manager table.data')).toBeVisible();
   await win.waitForTimeout(400);
-  await win.screenshot({ path: 'docs/screenshots/electron-stored-data.png' });
+  await win.screenshot({ path: 'docs/screenshots/electron-settings.png' });
   expect(errors).toEqual([]);
   await app.close();
 });

@@ -13,7 +13,7 @@ test('Manage stored data (web): labeled entries, delete one, clear history, dele
     timeout: 60_000,
   }); // all background requests done
   await page.getByRole('button', { name: 'Manage stored data' }).click();
-  const dialog = page.locator('#data-dialog');
+  const dialog = page.locator('#data-manager');
   await expect(dialog).toBeVisible();
   await expect(dialog).toContainText("browser's local storage");
   await expect(dialog).toContainText('ARE sent to the public Reactome, UniProt and NCBI');
@@ -66,7 +66,7 @@ test('Delete everything (web) asks for confirmation, then wipes history, session
 }) => {
   await runEnrichment(page, readFixture('gene-list-50.txt').split('\n').slice(0, 12).join('\n'));
   await page.getByRole('button', { name: 'Manage stored data' }).click();
-  const dialog = page.locator('#data-dialog');
+  const dialog = page.locator('#data-manager');
   await dialog.getByRole('button', { name: 'Delete everything…' }).click();
   await expect(dialog).toContainText('Really delete everything?');
   await dialog.getByRole('button', { name: 'Cancel' }).click();

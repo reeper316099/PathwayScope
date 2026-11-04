@@ -13,7 +13,7 @@ An interactive pathway explorer built on the [Reactome](https://reactome.org) kn
 | -------------------------------------------------------- | ------------------------------------------------------- | --------------------------------------------------------- |
 | ![Gene Explorer](docs/screenshots/electron-explorer.png) | ![Enrichment](docs/screenshots/electron-enrichment.png) | ![Pathway Browser](docs/screenshots/electron-browser.png) |
 
-More (dark mode, mobile web, stored-data panel) are in [`docs/screenshots/`](docs/screenshots).
+More (dark mode, mobile web, the Settings page) are in [`docs/screenshots/`](docs/screenshots).
 
 ## What has actually been tested (and what has not)
 
@@ -190,7 +190,7 @@ The installers are **not code-signed and not notarized** (that needs paid develo
 - The page can call exactly seven functions (`fetchJson`, `saveFile`, `openExternal`, `getAppInfo`, `listCache`, `deleteCacheEntry`, `onMenuAction`). All arguments are validated again in the main process.
 - Network access: the main process only talks to `reactome.org`, `rest.uniprot.org` and `eutils.ncbi.nlm.nih.gov` over https, GET and POST only (POST only to the Analysis Service), with size caps, timeouts, rate limiting and redirect re-checking. Links open in your browser only for an allowlist of hosts.
 - Reactome's diagrams are SVG; they are sanitized (DOMPurify plus extra rules: no scripts, no foreign content, only embedded PNG data URLs) before being inlined.
-- Your data stays on your device (see **Manage stored data** in the app). Gene symbols and lists you enter are sent to the public Reactome, UniProt and NCBI services to look them up, and nowhere else.
+- Your data stays on your device (see **Settings → Stored data** in the app, or File → Manage Stored Data). Gene symbols and lists you enter are sent to the public Reactome, UniProt and NCBI services to look them up, and nowhere else.
 
 ## Data attribution and licenses
 

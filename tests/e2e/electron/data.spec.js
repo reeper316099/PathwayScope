@@ -19,7 +19,7 @@ test('Manage stored data: list, delete one cached lookup (really removed from di
   await run.win.waitForTimeout(1200);
 
   await clickMenu(run.app, 'Manage Stored Data…');
-  const dialog = run.win.locator('#data-dialog');
+  const dialog = run.win.locator('#data-manager');
   await expect(dialog).toBeVisible();
   await expect(dialog).toContainText(
     'gene symbols and gene lists you enter ARE sent to the public Reactome, UniProt and NCBI',
@@ -83,7 +83,7 @@ test('Manage stored data: list, delete one cached lookup (really removed from di
   await runEnrichment(run.win, 'TP53\nATM');
   await run.win.waitForTimeout(1200);
   await clickMenu(run.app, 'Manage Stored Data…');
-  const d2 = run.win.locator('#data-dialog');
+  const d2 = run.win.locator('#data-manager');
   await d2.getByRole('button', { name: 'Delete everything…' }).click();
   await expect(d2).toContainText('Really delete everything?');
   await d2.getByRole('button', { name: 'Cancel' }).click();
@@ -111,8 +111,8 @@ test('Manage stored data: the IPC delete call refuses anything that is not one o
   await app.close();
 });
 
-test('Manage stored data: File menu has Show Data Folder and Manage Stored Data', async () => {
-  const { app } = await launch();
+test('Manage stored data: File menu has Show Data Folder and Manage Stored Data (which opens Settings)', async () => {
+  const { app, win } = await launch();
   const labels = await app.evaluate(({ Menu }) =>
     Menu.getApplicationMenu()
       .items.find((i) => i.label === 'File')
@@ -121,5 +121,11 @@ test('Manage stored data: File menu has Show Data Folder and Manage Stored Data'
   expect(labels).toEqual(
     expect.arrayContaining(['Manage Stored Data…', 'Show Data Folder', 'Clear Cache']),
   );
+  await clickMenu(app, 'Manage Stored Data…');
+  await expect(win.locator('[data-view=settings]')).toBeVisible();
+  await expect(win.locator('a[data-mode=settings]')).toHaveAttribute('aria-current', 'page');
+  await clickMenu(app, 'Gene Explorer');
+  await clickMenu(app, 'Settings');
+  await expect(win.locator('[data-view=settings] h1')).toHaveText('Settings');
   await app.close();
 });
