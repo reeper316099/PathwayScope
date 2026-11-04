@@ -37,6 +37,8 @@
     "build:web:e2e": "PS_OUT_DIR=../dist-web vite build --mode web",
     "test:e2e": "npm run build:electron && playwright test",
     "test:e2e:web": "playwright test --project=web",
+    "test:e2e:web:hermetic": "playwright test --project=web --grep @hermetic",
+    "test:e2e:web:live": "playwright test --project=web --grep-invert @hermetic",
     "test:e2e:electron": "npm run build:electron && playwright test --project=electron",
     "lint": "eslint .",
     "format": "prettier --write ."

@@ -7,6 +7,25 @@ import path from 'node:path';
 export const ALLOW_404 = /Failed to load resource: the server responded with a status of 404/;
 
 export const test = base.extend({
+  // Tests tagged @hermetic never touch the live services: the one request every page load makes (Reactome release info) is
+  // answered from a real saved response. All other tests use the live Reactome, UniProt and NCBI services.
+  hermetic: [
+    async ({ page }, use, testInfo) => {
+      if (testInfo.tags.includes('@hermetic')) {
+        const info = JSON.parse(
+          fs.readFileSync(
+            path.resolve(import.meta.dirname, '..', '..', 'fixtures', 'database-info.json'),
+            'utf8',
+          ),
+        ).data;
+        await page.route('**/ContentService/data/database/info', (route) =>
+          route.fulfill({ json: info, headers: { 'access-control-allow-origin': '*' } }),
+        );
+      }
+      await use(true);
+    },
+    { auto: true },
+  ],
   // `problems.allow(regex)` whitelists expected messages; any other error fails the test at teardown.
   problems: [
     async ({ page }, use) => {

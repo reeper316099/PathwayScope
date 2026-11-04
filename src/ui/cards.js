@@ -35,7 +35,7 @@ export function friendlyError(error) {
       if (isElectron())
         return 'Could not reach the data source. Check your internet connection. Anything you opened before is still available from the cache.';
       return navigator.onLine
-        ? "This data source can't be reached from the browser. Download the desktop app for full functionality."
+        ? "This data source can't be reached from the browser. Download the desktop app for full functionality. (If you just made many requests, the service may be briefly rate-limiting you: wait a minute and try again.)"
         : 'You appear to be offline.';
     }
     if (error.kind === 'blocked')

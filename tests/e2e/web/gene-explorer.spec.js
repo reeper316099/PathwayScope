@@ -36,12 +36,16 @@ test('Gene Explorer: NOTAGENE gives a friendly empty state (no crash)', async ({
   await expect(page.locator('.gene-card')).toHaveCount(0);
 });
 
-test('Gene Explorer: invalid characters are rejected without a request', async ({ page }) => {
-  await page.goto('/#/explorer');
-  await page.locator('#gene-input').fill('bad gene!');
-  await page.getByRole('button', { name: 'Explore' }).click();
-  await expect(page.locator('.state.empty')).toContainText('Please enter a gene symbol');
-});
+test(
+  'Gene Explorer: invalid characters are rejected without a request',
+  { tag: '@hermetic' },
+  async ({ page }) => {
+    await page.goto('/#/explorer');
+    await page.locator('#gene-input').fill('bad gene!');
+    await page.getByRole('button', { name: 'Explore' }).click();
+    await expect(page.locator('.state.empty')).toContainText('Please enter a gene symbol');
+  },
+);
 
 test('Gene Explorer: alias HER2 is resolved and flagged; clicking a pathway opens the detail drawer with hierarchy context', async ({
   page,

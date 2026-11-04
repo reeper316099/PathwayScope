@@ -147,15 +147,19 @@ test.describe('with a 50-gene analysis', () => {
     await expectFullResults(page);
   });
 
-  test('opening a malformed session file shows a friendly message', async ({ page }) => {
-    await page.goto('/#/enrichment');
-    const bad = test.info().outputPath('bad.json');
-    fs.writeFileSync(bad, '{"format":"nope"}');
-    await page.locator('input[type=file]').setInputFiles(bad);
-    await expect(page.locator('#toast')).toContainText(
-      'Could not open that file: This is not a PathwayScope session file.',
-    );
-  });
+  test(
+    'opening a malformed session file shows a friendly message',
+    { tag: '@hermetic' },
+    async ({ page }) => {
+      await page.goto('/#/enrichment');
+      const bad = test.info().outputPath('bad.json');
+      fs.writeFileSync(bad, '{"format":"nope"}');
+      await page.locator('input[type=file]').setInputFiles(bad);
+      await expect(page.locator('#toast')).toContainText(
+        'Could not open that file: This is not a PathwayScope session file.',
+      );
+    },
+  );
 
   test('saved session appears in the rail and can be re-opened', async ({ page }) => {
     await runEnrichment(page, 'TP53\nATM\nCHEK2\nBRCA1');

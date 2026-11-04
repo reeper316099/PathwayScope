@@ -3,6 +3,12 @@
 import { defineConfig } from '@playwright/test';
 
 const channel = process.env.PW_CHANNEL || undefined;
+// PW_BLOCK_LIVE=1 makes the live services unreachable (they resolve to localhost), to prove a test needs no live data.
+const blockLive = process.env.PW_BLOCK_LIVE
+  ? [
+      '--host-resolver-rules=MAP reactome.org 127.0.0.1, MAP rest.uniprot.org 127.0.0.1, MAP eutils.ncbi.nlm.nih.gov 127.0.0.1',
+    ]
+  : [];
 
 export default defineConfig({
   testDir: 'tests/e2e',
@@ -16,7 +22,12 @@ export default defineConfig({
     {
       name: 'web',
       testMatch: /web\/.*\.spec\.js/,
-      use: { baseURL: 'http://localhost:4173', channel, viewport: { width: 1400, height: 900 } },
+      use: {
+        baseURL: 'http://localhost:4173',
+        channel,
+        viewport: { width: 1400, height: 900 },
+        launchOptions: { args: blockLive },
+      },
     },
     { name: 'electron', testMatch: /electron\/.*\.spec\.js/ },
     { name: 'packaged', testMatch: /packaged\/.*\.spec\.js/ },

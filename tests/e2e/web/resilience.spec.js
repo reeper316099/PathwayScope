@@ -1,4 +1,5 @@
 // Web e2e: blocked services, slow network, partial failures, mobile viewport and dark mode.
+import fs from 'node:fs';
 import { expect, expectFullResults, runEnrichment, test } from '../support/collect.js';
 
 // Console errors caused by deliberately blocked requests are expected in these tests.
@@ -20,21 +21,22 @@ test('blocked Analysis Service: friendly error with Try again, then recovery', a
   await expect(page.locator('#banner')).toBeHidden();
 });
 
-test('blocked Content Service: Gene Explorer shows the browser banner and an error with retry', async ({
-  page,
-  problems,
-}) => {
-  problems.allow(BLOCKED);
-  await page.route('**/ContentService/**', (route) => route.abort());
-  await page.goto('/#/explorer/TP53');
-  await expect(page.locator('.explorer-result .state.error')).toContainText(
-    "can't be reached from the browser",
-  );
-  await expect(page.locator('#banner')).toContainText(
-    "This data source can't be reached from the browser. Download the desktop app for full functionality.",
-  );
-  await expect(page.getByRole('button', { name: 'Try again' })).toBeVisible();
-});
+test(
+  'blocked Content Service: Gene Explorer shows the browser banner and an error with retry',
+  { tag: '@hermetic' },
+  async ({ page, problems }) => {
+    problems.allow(BLOCKED);
+    await page.route('**/ContentService/**', (route) => route.abort());
+    await page.goto('/#/explorer/TP53');
+    await expect(page.locator('.explorer-result .state.error')).toContainText(
+      "can't be reached from the browser",
+    );
+    await expect(page.locator('#banner')).toContainText(
+      "This data source can't be reached from the browser. Download the desktop app for full functionality.",
+    );
+    await expect(page.getByRole('button', { name: 'Try again' })).toBeVisible();
+  },
+);
 
 test('slow network: skeleton and progress text show while the analysis runs, then results arrive', async ({
   page,
@@ -55,10 +57,10 @@ test('slow network: skeleton and progress text show while the analysis runs, the
   await expect(page.getByRole('button', { name: 'Run enrichment analysis' })).toBeVisible();
 });
 
-test('cancel: a running analysis can be cancelled', async ({ page }) => {
+test('cancel: a running analysis can be cancelled', { tag: '@hermetic' }, async ({ page }) => {
   await page.route('**/AnalysisService/**', async (route) => {
     await new Promise((r) => setTimeout(r, 4000));
-    await route.continue();
+    await route.abort(); // never reaches the live service: the test cancels first
   });
   await page.goto('/#/enrichment');
   await page.locator('#gene-list').fill('TP53\nBRCA1');
@@ -130,34 +132,47 @@ test.describe('mobile viewport 390x844', () => {
 
 test.describe('dark mode', () => {
   test.use({ colorScheme: 'dark' });
-  test('follows the system preference, can be toggled, and is remembered', async ({ page }) => {
-    await page.goto('/#/explorer/TP53');
-    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-    await page.locator('#theme-toggle').click();
-    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
-    await page.reload();
-    await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
-    await page.locator('#theme-toggle').click();
-    await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
-  });
+  test(
+    'follows the system preference, can be toggled, and is remembered',
+    { tag: '@hermetic' },
+    async ({ page }) => {
+      await page.goto('/#/enrichment');
+      await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+      await page.locator('#theme-toggle').click();
+      await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+      await page.reload();
+      await expect(page.locator('html')).toHaveAttribute('data-theme', 'light');
+      await page.locator('#theme-toggle').click();
+      await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark');
+    },
+  );
 });
 
-test('keyboard shortcuts (browser): Ctrl+K focuses search, Ctrl+1/2/3 switch modes, Ctrl+D toggles dark mode', async ({
-  page,
-}) => {
-  await page.goto('/#/explorer');
-  await page.keyboard.press('Control+k');
-  await expect(page.locator('#search-input')).toBeFocused();
-  await page.keyboard.press('Control+2');
-  await expect(page).toHaveURL(/#\/enrichment/);
-  await page.keyboard.press('Control+3');
-  await expect(page).toHaveURL(/#\/browser/);
-  await page.keyboard.press('Control+1');
-  await expect(page).toHaveURL(/#\/explorer/);
-  const theme = await page.locator('html').getAttribute('data-theme');
-  await page.keyboard.press('Control+d');
-  await expect(page.locator('html')).not.toHaveAttribute('data-theme', theme);
-});
+test(
+  'keyboard shortcuts (browser): Ctrl+K focuses search, Ctrl+1/2/3 switch modes, Ctrl+D toggles dark mode',
+  { tag: '@hermetic' },
+  async ({ page }) => {
+    // Ctrl+3 opens the Pathway Browser, which loads the hierarchy: answer it from the real saved (pruned) hierarchy fixture.
+    const hierarchy = JSON.parse(
+      fs.readFileSync(new URL('../../fixtures/hierarchy-subset.json', import.meta.url), 'utf8'),
+    ).data;
+    await page.route('**/ContentService/data/eventsHierarchy/**', (route) =>
+      route.fulfill({ json: hierarchy, headers: { 'access-control-allow-origin': '*' } }),
+    );
+    await page.goto('/#/explorer');
+    await page.keyboard.press('Control+k');
+    await expect(page.locator('#search-input')).toBeFocused();
+    await page.keyboard.press('Control+2');
+    await expect(page).toHaveURL(/#\/enrichment/);
+    await page.keyboard.press('Control+3');
+    await expect(page).toHaveURL(/#\/browser/);
+    await page.keyboard.press('Control+1');
+    await expect(page).toHaveURL(/#\/explorer/);
+    const theme = await page.locator('html').getAttribute('data-theme');
+    await page.keyboard.press('Control+d');
+    await expect(page.locator('html')).not.toHaveAttribute('data-theme', theme);
+  },
+);
 
 test('About dialog states the limitations, and the tree supports keyboard navigation', async ({
   page,

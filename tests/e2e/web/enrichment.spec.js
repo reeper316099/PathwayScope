@@ -44,7 +44,7 @@ test('Enrichment: duplicates, aliases, lowercase and quotes are cleaned and coun
   expect(facts).toMatch(/0 of 8 \(0\.0%\) unmapped/); // aliases (HER2, P53) and lowercase are mapped by Reactome
 });
 
-test('Enrichment: an empty list cannot be run', async ({ page }) => {
+test('Enrichment: an empty list cannot be run', { tag: '@hermetic' }, async ({ page }) => {
   await page.goto('/#/enrichment');
   await expect(page.locator('#list-preview')).toContainText('Nothing pasted yet');
   await expect(page.getByRole('button', { name: 'Run enrichment analysis' })).toBeDisabled();
@@ -52,15 +52,19 @@ test('Enrichment: an empty list cannot be run', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Run enrichment analysis' })).toBeDisabled();
 });
 
-test('Enrichment: a list over the size cap is refused with a clear message', async ({ page }) => {
-  await page.goto('/#/enrichment');
-  const big = Array.from({ length: 5001 }, (_, i) => `GENE${i}`).join('\n');
-  await page.locator('#gene-list').fill(big);
-  await expect(page.locator('#list-preview')).toContainText('over the limit of 5,000', {
-    timeout: 15_000,
-  });
-  await expect(page.getByRole('button', { name: 'Run enrichment analysis' })).toBeDisabled();
-});
+test(
+  'Enrichment: a list over the size cap is refused with a clear message',
+  { tag: '@hermetic' },
+  async ({ page }) => {
+    await page.goto('/#/enrichment');
+    const big = Array.from({ length: 5001 }, (_, i) => `GENE${i}`).join('\n');
+    await page.locator('#gene-list').fill(big);
+    await expect(page.locator('#list-preview')).toContainText('over the limit of 5,000', {
+      timeout: 15_000,
+    });
+    await expect(page.getByRole('button', { name: 'Run enrichment analysis' })).toBeDisabled();
+  },
+);
 
 test('Enrichment: a 100% unmapped list shows every unmapped id and no results, without errors', async ({
   page,
@@ -107,15 +111,19 @@ test('Enrichment: example lists are built live from real pathways and labeled wi
   await expect(page.locator('#list-preview')).toContainText(/\d+ identifiers/);
 });
 
-test('Enrichment: dropping a file onto the box loads it', async ({ page }) => {
-  await page.goto('/#/enrichment');
-  const data = 'Gene\nTP53\nBRCA1\nATM';
-  const dt = await page.evaluateHandle((text) => {
-    const d = new DataTransfer();
-    d.items.add(new File([text], 'genes.csv', { type: 'text/csv' }));
-    return d;
-  }, data);
-  await page.locator('.dropzone').dispatchEvent('drop', { dataTransfer: dt });
-  await expect(page.locator('#list-preview')).toContainText('3 identifiers');
-  await expect(page.locator('#list-preview')).toContainText('header row skipped');
-});
+test(
+  'Enrichment: dropping a file onto the box loads it',
+  { tag: '@hermetic' },
+  async ({ page }) => {
+    await page.goto('/#/enrichment');
+    const data = 'Gene\nTP53\nBRCA1\nATM';
+    const dt = await page.evaluateHandle((text) => {
+      const d = new DataTransfer();
+      d.items.add(new File([text], 'genes.csv', { type: 'text/csv' }));
+      return d;
+    }, data);
+    await page.locator('.dropzone').dispatchEvent('drop', { dataTransfer: dt });
+    await expect(page.locator('#list-preview')).toContainText('3 identifiers');
+    await expect(page.locator('#list-preview')).toContainText('header row skipped');
+  },
+);
